@@ -1,7 +1,7 @@
 ﻿namespace SharedLibrary
 {
     [Flags]
-    public enum AddressingModes : byte
+    public enum AddressingMode : byte
     {
         Accumulator = 0x00,
         Implied = 0x01,

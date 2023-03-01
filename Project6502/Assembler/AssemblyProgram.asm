@@ -1,3 +1,3 @@
-﻿LDA $C001,X
+﻿LDA $D0
 
 other stuff

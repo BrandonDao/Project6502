@@ -15,7 +15,7 @@ namespace SharedLibrary.Instructions
         public static byte[] Parse(string[] assemblyInstructions)
         {
             LDALayout layout = new();
-            var test = layout.Parse(Regex.Match(assemblyInstructions[0], layout.RegexPattern, layout.RegexOptions));
+            var test = layout.Parse(Regex.Match(assemblyInstructions[0], layout.Name, layout.RegexOptions));
 
             throw new NotImplementedException();
         }

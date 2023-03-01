@@ -7,7 +7,7 @@ namespace SharedLibrary.Instructions.LoadAndStore
     {
         private readonly LDALayout LDALayout = new();
 
-        public override string RegexPattern => LDALayout.RegexPattern;
+        public override string RegexPattern => LDALayout.Name;
         public override RegexOptions RegexOptions => LDALayout.RegexOptions;
         protected override ILayout layout => LDALayout;
 
