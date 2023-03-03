@@ -78,7 +78,16 @@ namespace SharedLibrary.Instructions
 
         public static byte[] ToByteArray(List<Instruction> instructions)
         {
-            var bytecode = new byte[instructions.Count * 3];
+            // Time O(2n)
+
+            int length = 0;
+
+            foreach (var instruction in instructions)
+            {
+                length += instruction.instructionData.Length;
+            }
+
+            var bytecode = new byte[length];
             int index = 0;
 
             foreach(var instruction in instructions)
