@@ -1,9 +1,9 @@
-﻿namespace SharedLibrary.Instructions.LoadAndStore
+﻿namespace SharedLibrary.Instructions.LSU.LoadAndStore
 {
     public class LDY : Instruction
     {
         public override string Name => "LDY";
-        
+
         public override Dictionary<string, byte> AddressingPatternToOpcode => new()
         {
             [RegexPatterns.Absolute] = 0xAC,

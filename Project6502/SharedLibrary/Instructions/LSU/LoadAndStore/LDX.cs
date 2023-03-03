@@ -1,4 +1,4 @@
-﻿namespace SharedLibrary.Instructions.LoadAndStore
+﻿namespace SharedLibrary.Instructions.LSU.LoadAndStore
 {
     public class LDX : Instruction
     {
