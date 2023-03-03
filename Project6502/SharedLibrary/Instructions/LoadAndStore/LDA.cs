@@ -1,5 +1,4 @@
 ﻿using SharedLibrary.Layouts;
-using System.Text.RegularExpressions;
 
 namespace SharedLibrary.Instructions.LoadAndStore
 {
@@ -7,9 +6,8 @@ namespace SharedLibrary.Instructions.LoadAndStore
     {
         private readonly LDALayout LDALayout = new();
 
-        public override string RegexPattern => LDALayout.Name;
-        public override RegexOptions RegexOptions => LDALayout.RegexOptions;
-        protected override ILayout layout => LDALayout;
+        public override string Name => LDALayout.Name;
+        protected override ILayout Layout => LDALayout;
 
         public LDA() { }
         public LDA(byte[] instructionData) => this.instructionData = instructionData;

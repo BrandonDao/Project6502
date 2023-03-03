@@ -2,10 +2,8 @@
 {
     public interface ILayout
     {
-        public Dictionary<string, byte> OpcodeByAddressingModePattern { get; }
+        public Dictionary<string, byte> AddressingPatternToOpcode { get; }
 
         public string Name { get; }
-
-        public byte[] Parse(string asmInstruction);
     }
 }

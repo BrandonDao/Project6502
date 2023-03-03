@@ -1,22 +1,77 @@
 ﻿using SharedLibrary.Layouts;
+using System.Globalization;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace SharedLibrary.Instructions
 {
     public abstract class Instruction
     {
-        public abstract string RegexPattern { get; }
-        public abstract RegexOptions RegexOptions { get; }
-        protected abstract ILayout layout { get; }
+        public abstract string Name { get; }
+        protected abstract ILayout Layout { get; }
         protected byte[] instructionData;
 
+#pragma warning disable // Possible null dereference & Nullability of types doesn't match
 
+        private static Instruction[] GetAllInstructions()
+            => Assembly.GetAssembly(typeof(Instruction))
+                .GetTypes()
+                .Where(type => type.IsSubclassOf(typeof(Instruction)))
+                .Select(type => (Instruction)Activator.CreateInstance(type))
+                .ToArray();
 
-        public static byte[] Parse(string[] assemblyInstructions)
+#pragma warning enable
+
+        private static byte[] ParseInstruction(string asmInstruction, ILayout layout)
         {
-            LDALayout layout = new();
-            var test = layout.Parse(Regex.Match(assemblyInstructions[0], layout.Name, layout.RegexOptions));
+            foreach (var regexPattern in layout.AddressingPatternToOpcode.Keys)
+            {
+                var match = Regex.Match(asmInstruction, regexPattern, RegexOptions.IgnoreCase);
 
+                if (match.Success)
+                {
+                    short address = short.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier);
+                    byte opcode = layout.AddressingPatternToOpcode[regexPattern];
+
+                    byte msb = (byte)((address & 0xFF00) >> 8);
+                    byte lsb = (byte)((address & 0x00FF));
+                    if (msb > 0)
+                    {
+                        return new byte[] { opcode, lsb, msb };
+                    }
+
+                    return new byte[] { opcode, lsb };
+                }
+            }
+            throw new ArgumentException("Invalid assembly syntax!", paramName: asmInstruction);
+        }
+
+        public static List<Instruction> Parse(string[] asmInstructions)
+        {
+            List<Instruction> parsedInstructions = new(asmInstructions.Length);
+            var allInstructions = GetAllInstructions();
+
+            foreach (string asmInstruction in asmInstructions)
+            {
+                if (asmInstruction.Equals("\r")) continue;
+
+                string instructionName = asmInstruction[..3];
+
+                foreach (Instruction instruction in allInstructions)
+                {
+                    if (!instruction.Name.Equals(instructionName)) continue;
+
+                    byte[] data = ParseInstruction(asmInstruction[4..], instruction.Layout);
+                    parsedInstructions.Add((Instruction)Activator.CreateInstance(instruction.GetType(), data));
+                }
+            }
+
+            return parsedInstructions;
+        }
+
+        public static byte[] ToByteArray(List<Instruction> instructions)
+        {
+            // cry
             throw new NotImplementedException();
         }
     }
