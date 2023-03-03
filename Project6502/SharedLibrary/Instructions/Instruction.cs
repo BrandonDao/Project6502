@@ -7,11 +7,15 @@ namespace SharedLibrary.Instructions
 {
     public abstract class Instruction
     {
+#pragma warning disable // Null-related warnings disabled types are guaranteed to be non-null by runtime
+
+        public static Dictionary<byte, byte> OpcodeToInstructionLength = new();
+
         public abstract string Name { get; }
+        public byte Opcode => instructionData[0];
         protected abstract ILayout Layout { get; }
         protected byte[] instructionData;
 
-#pragma warning disable // Possible null dereference & Nullability of types doesn't match
 
         private static Instruction[] GetAllInstructions()
             => Assembly.GetAssembly(typeof(Instruction))
@@ -35,12 +39,15 @@ namespace SharedLibrary.Instructions
 
                     byte msb = (byte)((address & 0xFF00) >> 8);
                     byte lsb = (byte)((address & 0x00FF));
-                    if (msb > 0)
+
+                    byte[] data = msb > 0 ? new byte[] { opcode, lsb, msb } : new byte[] { opcode, lsb };
+
+                    if (!OpcodeToInstructionLength.ContainsKey(opcode))
                     {
-                        return new byte[] { opcode, lsb, msb };
+                        OpcodeToInstructionLength.Add(opcode, (byte)data.Length);
                     }
 
-                    return new byte[] { opcode, lsb };
+                    return data;
                 }
             }
             throw new ArgumentException("Invalid assembly syntax!", paramName: asmInstruction);
@@ -71,8 +78,19 @@ namespace SharedLibrary.Instructions
 
         public static byte[] ToByteArray(List<Instruction> instructions)
         {
-            // cry
-            throw new NotImplementedException();
+            var bytecode = new byte[instructions.Count * 3];
+            int index = 0;
+
+            foreach(var instruction in instructions)
+            {
+                foreach (byte b in instruction.instructionData)
+                {
+                    bytecode[index] = b;
+                    index++;
+                }
+            }
+
+            return bytecode;
         }
     }
 }

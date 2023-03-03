@@ -2,16 +2,13 @@
 {
     public class Program
     {
-        public static string[] LoadAssemblyProgram()
-        {
-            return File.ReadAllText(@"C:\Users\brand\Documents\GitHub\Project6502\Project6502\Assembler\AssemblyProgram.asm").Split("\n");
-        }
+        public static string[] LoadAssemblyProgram() => File.ReadAllText(@"..\..\..\Assembly\AssemblyProgram.asm").Split("\n");
 
-        static void Main(string[] args)
+        static void Main()
         {
-            var asm = Assembler.Assemble(LoadAssemblyProgram());
+            byte[] asm = Assembler.Assemble(LoadAssemblyProgram());
 
-            File.WriteAllBytes("AssembledProgramBytes.bin", Linker.Link(asm));
+            File.WriteAllBytes(@"..\..\..\Assembly\AssembledProgramBytes.bin", Linker.Link(asm));
         }
     }
 }
