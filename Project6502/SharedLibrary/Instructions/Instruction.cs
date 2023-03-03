@@ -1,5 +1,4 @@
-﻿using SharedLibrary.Layouts;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -8,7 +7,8 @@ namespace SharedLibrary.Instructions
     public abstract class Instruction
     {
         public abstract string Name { get; }
-        protected abstract ILayout Layout { get; }
+        public abstract Dictionary<string, byte> AddressingPatternToOpcode { get; }
+
         protected byte[] instructionData;
 
 #pragma warning disable // Possible null dereference & Nullability of types doesn't match
@@ -22,16 +22,16 @@ namespace SharedLibrary.Instructions
 
 #pragma warning enable
 
-        private static byte[] ParseInstruction(string asmInstruction, ILayout layout)
+        protected virtual byte[] GetInstructionData(string asmInstruction, Instruction instruction)
         {
-            foreach (var regexPattern in layout.AddressingPatternToOpcode.Keys)
+            foreach (var regexPattern in instruction.AddressingPatternToOpcode.Keys)
             {
                 var match = Regex.Match(asmInstruction, regexPattern, RegexOptions.IgnoreCase);
 
                 if (match.Success)
                 {
                     short address = short.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier);
-                    byte opcode = layout.AddressingPatternToOpcode[regexPattern];
+                    byte opcode = instruction.AddressingPatternToOpcode[regexPattern];
 
                     byte msb = (byte)((address & 0xFF00) >> 8);
                     byte lsb = (byte)((address & 0x00FF));
@@ -61,7 +61,7 @@ namespace SharedLibrary.Instructions
                 {
                     if (!instruction.Name.Equals(instructionName)) continue;
 
-                    byte[] data = ParseInstruction(asmInstruction[4..], instruction.Layout);
+                    byte[] data = instruction.GetInstructionData(asmInstruction[4..], instruction);
                     parsedInstructions.Add((Instruction)Activator.CreateInstance(instruction.GetType(), data));
                 }
             }
