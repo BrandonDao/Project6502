@@ -1,15 +1,14 @@
 ﻿namespace SharedLibrary.Instructions.LSU.Transfer
 {
-    public class TXA : Instruction
+    public class TAY : Instruction
     {
-        public override string Name => throw new NotImplementedException();
+        public override string Name => "TAY";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException();
-        private const byte opcode = 0x8A;
+        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
+        private const byte opcode = 0xA8;
 
-
-        public TXA() { }
-        public TXA(byte[] instructionData) => this.instructionData = instructionData;
+        public TAY() { }
+        public TAY(byte[] instructionData) => this.instructionData = instructionData;
 
         protected override byte[] GetInstructionData(string asmInstruction, Instruction instruction)
         {

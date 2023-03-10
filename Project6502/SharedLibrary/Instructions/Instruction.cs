@@ -18,11 +18,34 @@ namespace SharedLibrary.Instructions
 
 
         private static Instruction[] GetAllInstructions()
-            => Assembly.GetAssembly(typeof(Instruction))
+        {
+            var allInstructions = Assembly
+                .GetAssembly(typeof(Instruction))
                 .GetTypes()
-                .Where(type => type.IsSubclassOf(typeof(Instruction)))
+                .Where(type => type.IsSubclassOf(typeof(Instruction)));
+
+            var output = allInstructions
+                .Where(type => type.GetConstructors().Length == 2)
                 .Select(type => (Instruction)Activator.CreateInstance(type))
                 .ToArray();
+
+            if (output.Length != allInstructions.Count())
+            {
+                string invalidInstructions = "";
+
+                allInstructions
+                    .Where(type => type.GetConstructors().Length != 2)
+                    .Select(type => (Instruction)Activator.CreateInstance(type))
+                    .ToList()
+                    .ForEach((instruction) => { invalidInstructions += instruction.Name + " + "; });
+                
+                invalidInstructions = invalidInstructions.Substring(0, invalidInstructions.Length - 3);
+
+                throw new NotImplementedException($"{invalidInstructions} do not contain valid constructors");
+            }
+
+            return output;
+        }
 
 #pragma warning enable
 
@@ -32,23 +55,31 @@ namespace SharedLibrary.Instructions
             {
                 var match = Regex.Match(asmInstruction, regexPattern, RegexOptions.IgnoreCase);
 
-                if (match.Success)
-                {
-                    short address = short.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier);
-                    byte opcode = instruction.AddressingPatternToOpcode[regexPattern];
+                if (!match.Success) continue;
 
+                byte[] data;
+
+                short address = short.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier);
+                byte opcode = instruction.AddressingPatternToOpcode[regexPattern];
+
+                if (regexPattern.Equals(RegexPatterns.Accumulator))
+                {
+                    data = new byte[] { opcode };
+                }
+                else
+                {
                     byte msb = (byte)((address & 0xFF00) >> 8);
                     byte lsb = (byte)((address & 0x00FF));
 
-                    byte[] data = msb > 0 ? new byte[] { opcode, lsb, msb } : new byte[] { opcode, lsb };
+                    data = msb > 0 ? new byte[] { opcode, lsb, msb } : new byte[] { opcode, lsb };
+                }                
 
-                    if (!OpcodeToInstructionLength.ContainsKey(opcode))
-                    {
-                        OpcodeToInstructionLength.Add(opcode, (byte)data.Length);
-                    }
-
-                    return data;
+                if (!OpcodeToInstructionLength.ContainsKey(opcode))
+                {
+                    OpcodeToInstructionLength.Add(opcode, (byte)data.Length);
                 }
+
+                return data;
             }
             throw new ArgumentException("Invalid assembly syntax!", paramName: asmInstruction);
         }
@@ -68,7 +99,7 @@ namespace SharedLibrary.Instructions
                 {
                     if (!instruction.Name.Equals(instructionName)) continue;
 
-                    byte[] data = instruction.GetInstructionData(asmInstruction[4..], instruction);
+                    byte[] data = instruction.GetInstructionData(asmInstruction[3..], instruction);
                     parsedInstructions.Add((Instruction)Activator.CreateInstance(instruction.GetType(), data));
                 }
             }
@@ -90,7 +121,7 @@ namespace SharedLibrary.Instructions
             var bytecode = new byte[length];
             int index = 0;
 
-            foreach(var instruction in instructions)
+            foreach (var instruction in instructions)
             {
                 foreach (byte b in instruction.instructionData)
                 {

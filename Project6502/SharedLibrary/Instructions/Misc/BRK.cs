@@ -4,8 +4,8 @@
     {
         public override string Name => "BRK";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new Exception("Unused");
-        private const byte opcode = 0xEA;
+        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
+        private const byte opcode = 0x00;
 
         public BRK() { }
         public BRK(byte[] instructionData) => this.instructionData = instructionData;

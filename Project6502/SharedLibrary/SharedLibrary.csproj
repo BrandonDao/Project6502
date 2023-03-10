@@ -7,14 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Instructions\ALU\Arithmetic\" />
-    <Folder Include="Instructions\ALU\IncrementAndDecrement\" />
-    <Folder Include="Instructions\ALU\Logic\" />
-    <Folder Include="Instructions\ALU\ShiftAndRotate\" />
     <Folder Include="Instructions\Branch\" />
-    <Folder Include="Instructions\SetAndClearFlags\" />
     <Folder Include="Instructions\Subroutines\" />
-    <Folder Include="Instructions\Stack\" />
   </ItemGroup>
 
 </Project>

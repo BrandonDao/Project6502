@@ -1,14 +1,15 @@
-﻿namespace SharedLibrary.Instructions.Misc
+﻿namespace SharedLibrary.Instructions.Memory.Stack
 {
-    public class NOP : Instruction
+    public class PHA : Instruction
     {
-        public override string Name => "NOP";
+        public override string Name => "PHA";
 
         public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0xEA;
+        private const byte opcode = 0x48;
 
-        public NOP() { }
-        public NOP(byte[] instructionData) => this.instructionData = instructionData;
+        public PHA() { }
+        public PHA(byte[] instructionData) => this.instructionData = instructionData;
+
 
         protected override byte[] GetInstructionData(string asmInstruction, Instruction instruction)
         {

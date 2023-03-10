@@ -1,12 +1,10 @@
-﻿using System.Reflection.Emit;
-
-namespace SharedLibrary.Instructions.LSU.Transfer
+﻿namespace SharedLibrary.Instructions.Memory.Transfer
 {
     public class TSX : Instruction
     {
         public override string Name => "TSX";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new Exception("Unused");
+        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
         private const byte opcode = 0xBA;
 
         public TSX() { }

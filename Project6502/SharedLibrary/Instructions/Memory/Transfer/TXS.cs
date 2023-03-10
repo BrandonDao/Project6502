@@ -4,7 +4,7 @@
     {
         public override string Name => "TXS";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new Exception("Unused");
+        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
         private const byte opcode = 0x9A;
 
         public TXS() { }

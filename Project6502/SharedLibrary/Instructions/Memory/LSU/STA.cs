@@ -14,5 +14,8 @@
             [RegexPatterns.ZPXIndirect] = 0x81,
             [RegexPatterns.ZPIndirectY] = 0x91
         };
+
+        public STA() { }
+        public STA(byte[] instructionData) => this.instructionData = instructionData;
     }
 }
