@@ -14,5 +14,9 @@
         public const string ZPY = @"^ *\$([\dA-Z]{2}), *Y(?:\Z|\r)";
         public const string ZPXIndirect = @"^ *\(\$([\dA-Z]{2}), *X\)(?:\Z|\r)";
         public const string ZPIndirectY = @"^ *\(\$([\dA-Z]{2})\), *Y(?:\Z|\r)";
+
+        public const string Label = @"^ *([a-zA-Z]+): *(?:\Z|\r)";
+
+        public const string Empty = @"^ *(?:\Z|\r)";
     }
 }

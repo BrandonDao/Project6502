@@ -6,8 +6,9 @@ namespace SharedLibrary.Instructions
 {
     public abstract class Instruction
     {
-#pragma warning disable // Null-related warnings disabled types are guaranteed to be non-null by runtime
+#pragma warning disable // Null-related warnings disabled, types are guaranteed to be non-null by runtime
 
+        public static Dictionary<string, int> LabelToLineNum = new();
         public static Dictionary<byte, byte> OpcodeToInstructionLength = new();
 
         public abstract string Name { get; }
@@ -45,6 +46,23 @@ namespace SharedLibrary.Instructions
             }
 
             return output;
+        }
+        private static void IndexLabels(string[] asmInstructions)
+        {
+            int lineNum = 0;
+            foreach(string line in asmInstructions)
+            {
+                if (Regex.Match(line, RegexPatterns.Empty).Success) continue;
+
+                if (Regex.Match(line, RegexPatterns.Label).Success)
+                {
+                    LabelToLineNum.Add(line, lineNum);
+                }
+                else
+                {
+                    lineNum++;
+                }
+            }
         }
 
 #pragma warning enable
@@ -86,6 +104,10 @@ namespace SharedLibrary.Instructions
 
         public static List<Instruction> Parse(string[] asmInstructions)
         {
+            // Preprocessing
+            IndexLabels(asmInstructions);
+
+
             List<Instruction> parsedInstructions = new(asmInstructions.Length);
             var allInstructions = GetAllInstructions();
 
