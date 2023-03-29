@@ -6,17 +6,14 @@ namespace SharedLibrary.Instructions
 {
     public abstract class Instruction
     {
-#pragma warning disable // Null-related warnings disabled, types are guaranteed to be non-null by runtime
-
         public static Dictionary<string, int> LabelToLineNum = new();
         public static Dictionary<byte, byte> OpcodeToInstructionLength = new();
 
+#pragma warning disable // Potentially null variables are actually guaranteed to be not-null by runtime
         public abstract string Name { get; }
         public abstract Dictionary<string, byte> AddressingPatternToOpcode { get; }
-
         public byte Opcode => instructionData[0];
         protected byte[] instructionData;
-
 
         private static Instruction[] GetAllInstructions()
         {
@@ -64,7 +61,6 @@ namespace SharedLibrary.Instructions
                 }
             }
         }
-
 #pragma warning enable
 
         protected virtual byte[] GetInstructionData(string asmInstruction, Instruction instruction)
@@ -111,18 +107,22 @@ namespace SharedLibrary.Instructions
             List<Instruction> parsedInstructions = new(asmInstructions.Length);
             var allInstructions = GetAllInstructions();
 
+            int lineNum = 0;
             foreach (string asmInstruction in asmInstructions)
             {
                 if (asmInstruction.Equals("\r")) continue;
+                var trimmedAsmInstruction = asmInstruction.TrimStart();
 
-                string instructionName = asmInstruction[..3];
+
+                string instructionName = trimmedAsmInstruction[..3];
 
                 foreach (Instruction instruction in allInstructions)
                 {
                     if (!instruction.Name.Equals(instructionName)) continue;
 
-                    byte[] data = instruction.GetInstructionData(asmInstruction[3..], instruction);
+                    byte[] data = instruction.GetInstructionData(trimmedAsmInstruction[3..], instruction);
                     parsedInstructions.Add((Instruction)Activator.CreateInstance(instruction.GetType(), data));
+                    lineNum++;
                 }
             }
 
