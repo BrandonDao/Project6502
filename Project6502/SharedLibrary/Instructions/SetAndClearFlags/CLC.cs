@@ -1,14 +1,14 @@
-﻿namespace SharedLibrary.Instructions.Misc
+﻿namespace SharedLibrary.Instructions.SetAndClearFlags
 {
-    public class NOP : Instruction
+    public class CLC : Instruction
     {
-        public override string Name => "NOP";
+        public override string Name => "CLC";
 
         public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0xEA;
+        private const byte opcode = 0x18;
 
-        public NOP() { }
-        public NOP(byte[] instructionData) => this.instructionData = instructionData;
+        public CLC() { }
+        public CLC(byte[] instructionData) => this.instructionData = instructionData;
 
         protected override byte[] GetInstructionData(string asmInstruction, Instruction instruction)
         {
