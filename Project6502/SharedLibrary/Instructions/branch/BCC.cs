@@ -1,17 +1,17 @@
-﻿namespace SharedLibrary.Instructions.LSU.Transfer
+﻿namespace SharedLibrary.Instructions.Misc
 {
     /// <summary>
-    /// <para>Transfer Index X To Stack Pointer</para>
+    /// <para>Branch on Carry Clear</para>
     /// </summary>
-    public class TXS : Instruction
+    public class BCC : Instruction
     {
-        public override string Name => "TXS";
+        public override string Name => "BCC";
 
         public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0x9A;
+        private const byte opcode = 0x90;
 
-        public TXS() { }
-        public TXS(byte[] instructionData) => this.instructionData = instructionData;
+        public BCC() { }
+        public BCC(byte[] instructionData) => this.instructionData = instructionData;
 
         protected override byte[] GetInstructionData(string asmInstruction, Instruction instruction)
         {

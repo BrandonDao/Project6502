@@ -1,5 +1,8 @@
 ﻿namespace SharedLibrary.Instructions.Stack
 {
+    /// <summary>
+    /// <para>Push Processor Status On Stack</para>
+    /// </summary>
     public class PHP : Instruction
     {
         public override string Name => "PHP";

@@ -1,5 +1,15 @@
 ﻿namespace SharedLibrary.Instructions.SetAndClearFlags
 {
+    /// <summary>
+    /// <para>Set Decimal Mode</para>
+    /// <para>Flags:</para>
+    /// <list type="bullet">
+    ///     <item>
+    ///         <term>D (Decimal Mode)</term>
+    ///         <description>Set to 1</description>
+    ///     </item>
+    /// </list>
+    /// </summary>
     public class SED : Instruction
     {
         public override string Name => "SED";

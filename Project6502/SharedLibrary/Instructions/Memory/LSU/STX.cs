@@ -1,5 +1,8 @@
 ﻿namespace SharedLibrary.Instructions.LSU.LoadAndStore
 {
+    /// <summary>
+    /// <para>Store Index Register X in Memory</para>
+    /// </summary>
     public class STX : Instruction
     {
         public override string Name => "STX";

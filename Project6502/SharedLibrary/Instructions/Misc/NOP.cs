@@ -1,5 +1,8 @@
 ﻿namespace SharedLibrary.Instructions.Misc
 {
+    /// <summary>
+    /// <para>No Operation</para>
+    /// </summary>
     public class NOP : Instruction
     {
         public override string Name => "NOP";

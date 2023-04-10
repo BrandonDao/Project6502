@@ -1,5 +1,15 @@
 ﻿namespace SharedLibrary.Instructions.SetAndClearFlags
 {
+    /// <summary>
+    /// <para>Clear Carry Flag</para>
+    /// <para>Flags:</para>
+    /// <list type="bullet">
+    ///     <item>
+    ///         <term>C (Carry)</term>
+    ///         <description>Set to 0</description>
+    ///     </item>
+    /// </list>
+    /// </summary>
     public class CLC : Instruction
     {
         public override string Name => "CLC";

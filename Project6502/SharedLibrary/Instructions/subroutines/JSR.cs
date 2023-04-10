@@ -1,17 +1,17 @@
-﻿namespace SharedLibrary.Instructions.LSU.Transfer
+﻿namespace SharedLibrary.Instructions.Subroutines
 {
     /// <summary>
-    /// <para>Transfer Index X To Stack Pointer</para>
+    /// <para>Jump To Subroutine</para>
     /// </summary>
-    public class TXS : Instruction
+    public class JSR : Instruction
     {
-        public override string Name => "TXS";
+        public override string Name => "JSR";
 
         public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0x9A;
+        private const byte opcode = 0x20;
 
-        public TXS() { }
-        public TXS(byte[] instructionData) => this.instructionData = instructionData;
+        public JSR() { }
+        public JSR(byte[] instructionData) => this.instructionData = instructionData;
 
         protected override byte[] GetInstructionData(string asmInstruction, Instruction instruction)
         {

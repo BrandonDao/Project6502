@@ -1,24 +1,24 @@
-﻿namespace SharedLibrary.Instructions.SetAndClearFlags
+﻿namespace SharedLibrary.Instructions.Subroutines
 {
     /// <summary>
-    /// <para>Set Interrupt Disable</para>
+    /// <para>Break Command</para>
     /// <para>Flags:</para>
     /// <list type="bullet">
     ///     <item>
-    ///         <term>I (Interrupt Disable)</term>
+    ///         <term>I (Interrupt)</term>
     ///         <description>Set to 1</description>
     ///     </item>
     /// </list>
     /// </summary>
-    public class SEI : Instruction
+    public class BRK : Instruction
     {
-        public override string Name => "SEI";
+        public override string Name => "BRK";
 
         public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0x78;
+        private const byte opcode = 0x00;
 
-        public SEI() { }
-        public SEI(byte[] instructionData) => this.instructionData = instructionData;
+        public BRK() { }
+        public BRK(byte[] instructionData) => this.instructionData = instructionData;
 
         protected override byte[] GetInstructionData(string asmInstruction, Instruction instruction)
         {

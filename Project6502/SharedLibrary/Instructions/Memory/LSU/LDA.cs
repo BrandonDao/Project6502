@@ -1,5 +1,19 @@
 ﻿namespace SharedLibrary.Instructions.LSU.LoadAndStore
 {
+    /// <summary>
+    /// <para>Load Accumulator with Memory</para>
+    /// <para>Flags:</para>
+    /// <list type="bullet">
+    ///     <item>
+    ///         <term>N (Negative)</term>
+    ///         <description>Set if the bit 7 of the accumulator after the load is 1</description>
+    ///     </item>
+    ///     <item>
+    ///         <term>Z (Zero)</term>
+    ///         <description>Set if the accumulator is 0 after the load</description>
+    ///     </item>
+    /// </list>
+    /// </summary>
     public class LDA : Instruction
     {
         public override string Name => "LDA";

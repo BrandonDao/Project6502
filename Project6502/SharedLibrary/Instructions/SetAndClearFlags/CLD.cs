@@ -1,5 +1,15 @@
 ﻿namespace SharedLibrary.Instructions.SetAndClearFlags
 {
+    /// <summary>
+    /// <para>Clear Decimal Mode</para>
+    /// <para>Flags:</para>
+    /// <list type="bullet">
+    ///     <item>
+    ///         <term>D (Decimal Mode)</term>
+    ///         <description>Set to 0</description>
+    ///     </item>
+    /// </list>
+    /// </summary>
     public class CLD : Instruction
     {
         public override string Name => "CLD";

@@ -1,8 +1,8 @@
-﻿namespace SharedLibrary.Instructions.Memory.Stack
+﻿namespace SharedLibrary.Instructions.Subroutines
 {
     /// <summary>
-    /// <para>Pull Processor Status From Stack</para>
-    /// <para>Flags:</para>
+    /// <para>Return From Interrupt</para>
+    /// <para>Restores Program Counter and Flags to pre-interrupt status:</para>
     /// <list type="bullet">
     ///     <item>
     ///         <term>N (Negative)</term>
@@ -34,15 +34,15 @@
     ///     </item>
     /// </list>
     /// </summary>
-    public class PLP : Instruction
+    public class RTI : Instruction
     {
-        public override string Name => "PLP";
+        public override string Name => "RTI";
 
         public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0x28;
+        private const byte opcode = 0x40;
 
-        public PLP() { }
-        public PLP(byte[] instructionData) => this.instructionData = instructionData;
+        public RTI() { }
+        public RTI(byte[] instructionData) => this.instructionData = instructionData;
 
         protected override byte[] GetInstructionData(string asmInstruction, Instruction instruction)
         {

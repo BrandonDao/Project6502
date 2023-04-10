@@ -1,5 +1,15 @@
 ﻿namespace SharedLibrary.Instructions.SetAndClearFlags
 {
+    /// <summary>
+    /// <para>Clear Interrupt Disable</para>
+    /// <para>Flags:</para>
+    /// <list type="bullet">
+    ///     <item>
+    ///         <term>I (Interrupt Disable)</term>
+    ///         <description>Set to 0</description>
+    ///     </item>
+    /// </list>
+    /// </summary>
     public class CLI : Instruction
     {
         public override string Name => "CLI";

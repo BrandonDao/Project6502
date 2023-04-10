@@ -1,14 +1,17 @@
-﻿namespace SharedLibrary.Instructions.Misc
+﻿namespace SharedLibrary.Instructions.Branch
 {
-    public class BRK : Instruction
+    /// <summary>
+    /// <para>Branch on Result Plus</para>
+    /// </summary>
+    public class BPL : Instruction
     {
-        public override string Name => "BRK";
+        public override string Name => "BPL";
 
         public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0x00;
+        private const byte opcode = 0x10;
 
-        public BRK() { }
-        public BRK(byte[] instructionData) => this.instructionData = instructionData;
+        public BPL() { }
+        public BPL(byte[] instructionData) => this.instructionData = instructionData;
 
         protected override byte[] GetInstructionData(string asmInstruction, Instruction instruction)
         {

@@ -1,5 +1,19 @@
 ﻿namespace SharedLibrary.Instructions.ALU.Logic
 {
+    /// <summary>
+    /// <para>"OR" Memory with Accumulator</para>
+    /// <para>Flags:</para>
+    /// <list type="bullet">
+    ///     <item>
+    ///         <term>N (Negative)</term>
+    ///         <description>Set if bit 7 of the result is 1</description>
+    ///     </item>
+    ///     <item>
+    ///         <term>Z (Zero)</term>
+    ///         <description>Set if the result of the operation is 0</description>
+    ///     </item>
+    /// </list>
+    /// </summary>
     public class ORA : Instruction
     {
         public override string Name => "ORA";
