@@ -1,5 +1,8 @@
 ﻿namespace SharedLibrary.Instructions.Branch
 {
+    /// <summary>
+    /// <para>Branch on Carry Set</para>
+    /// </summary>
     public class BCS : Instruction
     {
         public override string Name => "BCS";

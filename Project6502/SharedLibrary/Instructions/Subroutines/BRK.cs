@@ -1,5 +1,15 @@
-﻿namespace SharedLibrary.Instructions.Misc
+﻿namespace SharedLibrary.Instructions.Subroutines
 {
+    /// <summary>
+    /// <para>Break Command</para>
+    /// <para>Flags:</para>
+    /// <list type="bullet">
+    ///     <item>
+    ///         <term>I (Interrupt)</term>
+    ///         <description>Set to 1</description>
+    ///     </item>
+    /// </list>
+    /// </summary>
     public class BRK : Instruction
     {
         public override string Name => "BRK";

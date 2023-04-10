@@ -1,5 +1,8 @@
 ﻿namespace SharedLibrary.Instructions.Branch
 {
+    /// <summary>
+    /// <para>Branch on Result Plus</para>
+    /// </summary>
     public class BPL : Instruction
     {
         public override string Name => "BPL";

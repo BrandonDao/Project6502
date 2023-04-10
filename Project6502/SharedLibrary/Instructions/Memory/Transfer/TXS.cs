@@ -1,5 +1,8 @@
 ﻿namespace SharedLibrary.Instructions.LSU.Transfer
 {
+    /// <summary>
+    /// <para>Transfer Index X To Stack Pointer</para>
+    /// </summary>
     public class TXS : Instruction
     {
         public override string Name => "TXS";

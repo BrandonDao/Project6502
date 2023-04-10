@@ -1,5 +1,8 @@
 ﻿namespace SharedLibrary.Instructions.Branch
 {
+    /// <summary>
+    /// <para>Branch on Result Minus</para>
+    /// </summary>
     public class BMI : Instruction
     {
         public override string Name => "BMI";

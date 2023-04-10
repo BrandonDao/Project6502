@@ -1,11 +1,14 @@
 ﻿namespace SharedLibrary.Instructions.Subroutines
 {
+    /// <summary>
+    /// <para>Return From Subroutine</para>
+    /// </summary>
     public class RTS : Instruction
     {
         public override string Name => "RTS";
 
         public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0x40;
+        private const byte opcode = 0x60;
 
         public RTS() { }
         public RTS(byte[] instructionData) => this.instructionData = instructionData;

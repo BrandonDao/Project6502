@@ -1,5 +1,8 @@
 ﻿namespace SharedLibrary.Instructions.Memory.Stack
 {
+    /// <summary>
+    /// <para>Push Accumulator On Stack</para>
+    /// </summary>
     public class PHA : Instruction
     {
         public override string Name => "PHA";

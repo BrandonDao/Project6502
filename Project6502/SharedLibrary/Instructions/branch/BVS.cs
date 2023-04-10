@@ -1,5 +1,8 @@
 ﻿namespace SharedLibrary.Instructions.Branch
 {
+    /// <summary>
+    /// <para>Branch on Overflow Set</para>
+    /// </summary>
     public class BVS : Instruction
     {
         public override string Name => "BVS";

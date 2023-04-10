@@ -1,5 +1,8 @@
 ﻿namespace SharedLibrary.Instructions.LSU.LoadAndStore
 {
+    /// <summary>
+    /// <para>Store Index Register Y in Memory</para>
+    /// </summary>
     public class STY : Instruction
     {
         public override string Name => "STY";

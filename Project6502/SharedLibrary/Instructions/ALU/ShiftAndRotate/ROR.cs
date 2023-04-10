@@ -1,5 +1,24 @@
 ﻿namespace SharedLibrary.Instructions.ALU.ShiftAndRotate
 {
+    /// <summary>
+    /// <para>Rotate Left</para>
+    /// <para>Shifts right 1 bit with bit 0 stored in the carry and the carry stored in bit 7</para>
+    /// <para>Flags:</para>
+    /// <list type="bullet">
+    ///     <item>
+    ///         <term>N (Negative)</term>
+    ///         <description>Set to the input carry</description>
+    ///     </item>
+    ///     <item>
+    ///         <term>Z (Zero)</term>
+    ///         <description>Set if the result of the operation is 0</description>
+    ///     </item>
+    ///     <item>
+    ///         <term>C (Carry)</term>
+    ///         <description>Set to bit 0 of the input</description>
+    ///     </item>
+    /// </list>
+    /// </summary>
     public class ROR : Instruction
     {
         public override string Name => "ROR";

@@ -1,5 +1,8 @@
 ﻿namespace SharedLibrary.Instructions.LSU.LoadAndStore
 {
+    /// <summary>
+    /// <para>Store Accumulator in Memory</para>
+    /// </summary>
     public class STA : Instruction
     {
         public override string Name => "STA";

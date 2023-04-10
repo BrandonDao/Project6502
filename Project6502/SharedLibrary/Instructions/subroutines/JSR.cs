@@ -1,5 +1,8 @@
 ﻿namespace SharedLibrary.Instructions.Subroutines
 {
+    /// <summary>
+    /// <para>Jump To Subroutine</para>
+    /// </summary>
     public class JSR : Instruction
     {
         public override string Name => "JSR";

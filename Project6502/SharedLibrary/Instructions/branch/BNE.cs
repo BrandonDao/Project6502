@@ -1,5 +1,8 @@
 ﻿namespace SharedLibrary.Instructions.Branch
 {
+    /// <summary>
+    /// <para>Branch on Result Not Zero</para>
+    /// </summary>
     public class BNE : Instruction
     {
         public override string Name => "BNE";

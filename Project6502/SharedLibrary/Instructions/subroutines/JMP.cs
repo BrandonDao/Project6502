@@ -1,5 +1,8 @@
 ﻿namespace SharedLibrary.Instructions.Subroutines
 {
+    /// <summary>
+    /// <para>Jump Indirect</para>
+    /// </summary>
     public class JMP : Instruction
     {
         public override string Name => "JMP";
