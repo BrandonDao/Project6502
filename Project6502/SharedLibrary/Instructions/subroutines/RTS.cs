@@ -13,7 +13,7 @@
         public RTS() { }
         public RTS(byte[] instructionData) => this.instructionData = instructionData;
 
-        protected override byte[] GetInstructionData(string asmInstruction, Instruction instruction)
+        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
         {
             if (!OpcodeToInstructionLength.ContainsKey(opcode))
             {

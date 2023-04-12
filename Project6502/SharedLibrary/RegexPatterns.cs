@@ -3,6 +3,7 @@
     public static class RegexPatterns
     {
         public const string Label = @"^ *([a-zA-Z]+): *(?:\Z|\r)";
+        public const string LabelReference = @"^ *([a-zA-Z]+) *(?:\Z|\r)";
 
         public const string Empty = @"^ *(?:\Z|\r)";
 

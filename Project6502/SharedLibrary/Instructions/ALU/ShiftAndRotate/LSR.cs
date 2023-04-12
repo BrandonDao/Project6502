@@ -1,4 +1,7 @@
-﻿namespace SharedLibrary.Instructions.ALU.ShiftAndRotate
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
+
+namespace SharedLibrary.Instructions.ALU.ShiftAndRotate
 {
     /// <summary>
     /// <para>Logical Shift Right</para>
@@ -26,12 +29,24 @@
         {
             [RegexPatterns.Absolute] = 0x4E,
             [RegexPatterns.AbsoluteX] = 0x5E,
-            [RegexPatterns.Accumulator] = 0x4A,
             [RegexPatterns.ZP] = 0x46,
             [RegexPatterns.ZPX] = 0x56
         };
+        private const byte accumulatorOpcode = 0x4A;
 
         public LSR() { }
         public LSR(byte[] instructionData) => this.instructionData = instructionData;
+
+        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
+        {
+            var match = Regex.Match(asmInstruction, RegexPatterns.Accumulator);
+
+            if(match.Success)
+            {
+                return new byte[] { accumulatorOpcode };
+            }
+
+            return base.GetInstructionData(lineNumber, asmInstruction, instruction);
+        }
     }
 }
