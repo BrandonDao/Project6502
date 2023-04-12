@@ -1,4 +1,6 @@
-﻿namespace SharedLibrary.Instructions.Subroutines
+﻿using System.Text.RegularExpressions;
+
+namespace SharedLibrary.Instructions.Subroutines
 {
     /// <summary>
     /// <para>Jump To Subroutine</para>
@@ -7,20 +9,28 @@
     {
         public override string Name => "JSR";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0x20;
+        public override Dictionary<string, byte> AddressingPatternToOpcode => new()
+        {
+            [RegexPatterns.Absolute] = 0x20,
+        };
 
         public JSR() { }
         public JSR(byte[] instructionData) => this.instructionData = instructionData;
 
         protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
         {
-            if (!OpcodeToInstructionLength.ContainsKey(opcode))
+            var match = Regex.Match(asmInstruction, RegexPatterns.LabelReference);
+
+            if (match.Success)
             {
-                OpcodeToInstructionLength.Add(opcode, 1);
+                short address = LabelToLineNum[match.Groups[1].Value];
+                byte msb = (byte)((address & 0xFF00) >> 8);
+                byte lsb = (byte)(address & 0x00FF);
+
+                return new byte[] { AddressingPatternToOpcode[RegexPatterns.Absolute], lsb, msb };
             }
 
-            return new byte[] { opcode };
+            return base.GetInstructionData(lineNumber, asmInstruction, instruction);
         }
     }
 }
