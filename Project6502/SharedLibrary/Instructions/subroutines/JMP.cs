@@ -1,7 +1,5 @@
-﻿using System.Globalization;
-using System.Net;
-using System.Reflection.Emit;
-using System.Text.RegularExpressions;
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
 
 namespace SharedLibrary.Instructions.Subroutines
 {
@@ -12,29 +10,13 @@ namespace SharedLibrary.Instructions.Subroutines
     {
         public override string Name => "JMP";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingPatternToInfo => new()
         {
-            [RegexPatterns.Absolute] = 0x4C,
-            [RegexPatterns.AbsoluteIndirect] = 0x6C,
+            [Absolute.Instance] = new InstructionInfo(0x4C, Absolute.Instance),
+            [AbsoluteIndirect.Instance] = new InstructionInfo(0x6C, AbsoluteIndirect.Instance)
         };
 
         public JMP() { }
         public JMP(byte[] instructionData) => this.instructionData = instructionData;
-
-        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
-        {
-            var match = Regex.Match(asmInstruction, RegexPatterns.LabelReference);
-
-            if (match.Success)
-            {
-                short address = LabelToLineNum[match.Groups[1].Value];
-                byte msb = (byte)((address & 0xFF00) >> 8);
-                byte lsb = (byte)(address & 0x00FF);
-
-                return new byte[] { AddressingPatternToOpcode[RegexPatterns.Absolute], lsb, msb };
-            }
-
-            return base.GetInstructionData(lineNumber, asmInstruction, instruction);
-        }
     }
 }

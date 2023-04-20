@@ -4,7 +4,12 @@ namespace Assembler
 {
     public static class Assembler
     {
-        public static byte[] Assemble(string[] assemblyProgram)
-            => Instruction.ToByteArray(Instruction.Parse(assemblyProgram));
+        public static void Assemble(string assemblySourceCodeFile)
+        {
+            string[] asm = File.ReadAllText(assemblySourceCodeFile).Split("\n");
+            byte[] machineCode = Instruction.ToByteArray(Instruction.Parse(asm));
+
+            File.WriteAllBytes(@"..\..\..\Assembly\AssembledProgramBytes.bin", Linker.Link(machineCode));
+        }
     }
 }

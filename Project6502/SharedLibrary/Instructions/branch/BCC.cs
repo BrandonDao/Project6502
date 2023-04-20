@@ -1,4 +1,7 @@
-﻿namespace SharedLibrary.Instructions.Misc
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Misc;
+
+namespace SharedLibrary.Instructions.Misc
 {
     /// <summary>
     /// <para>Branch on Carry Clear</para>
@@ -7,20 +10,12 @@
     {
         public override string Name => "BCC";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0x90;
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingPatternToInfo => new()
+        {
+            [Implied.Instance] = new InstructionInfo(0x90, Implied.Instance)
+        };
 
         public BCC() { }
         public BCC(byte[] instructionData) => this.instructionData = instructionData;
-
-        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
-        {
-            if (!OpcodeToInstructionLength.ContainsKey(opcode))
-            {
-                OpcodeToInstructionLength.Add(opcode, 1);
-            }
-
-            return new byte[] { opcode, (byte)(LabelToLineNum[asmInstruction.Trim()] - lineNumber) };
-        }
     }
 }

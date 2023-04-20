@@ -1,4 +1,7 @@
-﻿namespace SharedLibrary.Instructions.Subroutines
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Misc;
+
+namespace SharedLibrary.Instructions.Subroutines
 {
     /// <summary>
     /// <para>Return From Subroutine</para>
@@ -7,20 +10,12 @@
     {
         public override string Name => "RTS";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0x60;
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingPatternToInfo => new()
+        {
+            [Implied.Instance] = new InstructionInfo(0x60, Implied.Instance)
+        };
 
         public RTS() { }
         public RTS(byte[] instructionData) => this.instructionData = instructionData;
-
-        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
-        {
-            if (!OpcodeToInstructionLength.ContainsKey(opcode))
-            {
-                OpcodeToInstructionLength.Add(opcode, 1);
-            }
-
-            return new byte[] { opcode };
-        }
     }
 }

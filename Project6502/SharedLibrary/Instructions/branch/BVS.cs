@@ -1,4 +1,7 @@
-﻿namespace SharedLibrary.Instructions.Branch
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Misc;
+
+namespace SharedLibrary.Instructions.Branch
 {
     /// <summary>
     /// <para>Branch on Overflow Set</para>
@@ -7,20 +10,12 @@
     {
         public override string Name => "BVS";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0x70;
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingPatternToInfo => new()
+        {
+            [Implied.Instance] = new InstructionInfo(0x70, Implied.Instance)
+        };
 
         public BVS() { }
         public BVS(byte[] instructionData) => this.instructionData = instructionData;
-
-        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
-        {
-            if (!OpcodeToInstructionLength.ContainsKey(opcode))
-            {
-                OpcodeToInstructionLength.Add(opcode, 1);
-            }
-
-            return new byte[] { opcode, (byte)(LabelToLineNum[asmInstruction.Trim()] - lineNumber) };
-        }
     }
 }

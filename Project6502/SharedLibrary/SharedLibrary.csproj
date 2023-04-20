@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Instructions\ALU\**" />
+    <Compile Remove="Instructions\Memory\**" />
+    <Compile Remove="Instructions\SetAndClearFlags\**" />
+    <EmbeddedResource Remove="Instructions\ALU\**" />
+    <EmbeddedResource Remove="Instructions\Memory\**" />
+    <EmbeddedResource Remove="Instructions\SetAndClearFlags\**" />
+    <None Remove="Instructions\ALU\**" />
+    <None Remove="Instructions\Memory\**" />
+    <None Remove="Instructions\SetAndClearFlags\**" />
+  </ItemGroup>
+
 </Project>
