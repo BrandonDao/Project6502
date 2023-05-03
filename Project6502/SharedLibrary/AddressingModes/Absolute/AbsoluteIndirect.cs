@@ -4,9 +4,9 @@
     {
         public static AbsoluteIndirect Instance { get; } = new();
 
-        public string Pattern => @"^ *\(\$[\dA-Z]{4}\)(?:\Z|\r)";
-        public byte Length => 3;
-        public byte[] Parser(byte opcode, string address)
+        public string Pattern => @"^ *\(\$[\dA-Z]{4}\)\Z";
+        public byte InstructionLength => 3;
+        public byte[] Parse(byte opcode, string address)
         {
             throw new NotImplementedException();
         }

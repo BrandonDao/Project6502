@@ -10,9 +10,10 @@ namespace SharedLibrary.Instructions.Subroutines
     {
         public override string Name => "JMP";
 
-        public override Dictionary<IAddressingMode, InstructionInfo> AddressingPatternToInfo => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
             [Absolute.Instance] = new InstructionInfo(0x4C, Absolute.Instance),
+            [AbsoluteLabeled.Instance] = new InstructionInfo(0x4C, AbsoluteLabeled.Instance),
             [AbsoluteIndirect.Instance] = new InstructionInfo(0x6C, AbsoluteIndirect.Instance)
         };
 

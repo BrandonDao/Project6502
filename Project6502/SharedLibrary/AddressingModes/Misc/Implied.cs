@@ -4,11 +4,11 @@
     {
         public static Implied Instance { get; } = new();
 
-        public string Pattern => @"^ *(?:\Z|\r)";
-        public byte Length => 1;
-        public byte[] Parser(byte opcode, string address)
+        public string Pattern => @"^ *\Z";
+        public byte InstructionLength => 1;
+        public byte[] Parse(byte opcode, string address) => new byte[]
         {
-            throw new NotImplementedException();
-        }
+            opcode
+        };
     }
 }

@@ -5,6 +5,7 @@ namespace SharedLibrary.Instructions
     public class InstructionInfo
     {
         public byte Opcode { get; }
+        public Type InstructionType { get; set; }
         public IAddressingMode AddressingMode { get; }
 
         public InstructionInfo(byte opcode, IAddressingMode addressingMode)

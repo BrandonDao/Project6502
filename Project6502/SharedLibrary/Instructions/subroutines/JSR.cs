@@ -10,7 +10,7 @@ namespace SharedLibrary.Instructions.Subroutines
     {
         public override string Name => "JSR";
 
-        public override Dictionary<IAddressingMode, InstructionInfo> AddressingPatternToInfo => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
             [Absolute.Instance] = new InstructionInfo(0x20, Absolute.Instance)
         };

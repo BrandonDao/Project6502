@@ -41,7 +41,7 @@ namespace SharedLibrary.Instructions.Subroutines
     {
         public override string Name => "RTI";
 
-        public override Dictionary<IAddressingMode, InstructionInfo> AddressingPatternToInfo => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
             [Implied.Instance] = new InstructionInfo(0x40, Implied.Instance)
         };

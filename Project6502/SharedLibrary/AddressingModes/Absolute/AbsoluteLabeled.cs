@@ -4,9 +4,9 @@
     {
         public static AbsoluteLabeled Instance { get; } = new();
 
-        public string Pattern => @"^ *[A-Z]+ *(?:\Z|\r)";
-        public byte Length => 3;
-        public byte[] Parser(byte opcode, string address)
+        public string Pattern => @"^ *[A-Z]+ *\Z";
+        public byte InstructionLength => 3;
+        public byte[] Parse(byte opcode, string address)
         {
             throw new NotImplementedException();
         }

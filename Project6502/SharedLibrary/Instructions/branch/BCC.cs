@@ -10,7 +10,7 @@ namespace SharedLibrary.Instructions.Misc
     {
         public override string Name => "BCC";
 
-        public override Dictionary<IAddressingMode, InstructionInfo> AddressingPatternToInfo => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
             [Implied.Instance] = new InstructionInfo(0x90, Implied.Instance)
         };
