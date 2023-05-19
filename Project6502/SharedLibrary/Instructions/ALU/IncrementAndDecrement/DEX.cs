@@ -1,4 +1,7 @@
-﻿namespace SharedLibrary.Instructions.ALU.IncrementAndDecrement
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Misc;
+
+namespace SharedLibrary.Instructions.ALU.IncrementAndDecrement
 {
     /// <summary>
     /// <para>Decrement Index Register X By One</para>
@@ -18,20 +21,12 @@
     {
         public override string Name => "DEX";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0xCA;
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
+        {
+            [Implied.Instance] = new InstructionInfo(0xCA, Implied.Instance)
+        };
 
         public DEX() { }
         public DEX(byte[] instructionData) => this.instructionData = instructionData;
-
-        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
-        {
-            if (!OpcodeToInstructionLength.ContainsKey(opcode))
-            {
-                OpcodeToInstructionLength.Add(opcode, 1);
-            }
-
-            return new byte[] { opcode };
-        }
     }
 }

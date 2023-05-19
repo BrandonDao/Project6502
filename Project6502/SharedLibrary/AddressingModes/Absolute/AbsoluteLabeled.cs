@@ -7,8 +7,6 @@
         public string Pattern => @"^ *[A-Z]+ *\Z";
         public byte InstructionLength => 3;
         public byte[] Parse(byte opcode, string address)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException("This addressing mode is used solely for regex matching labels!");
     }
 }

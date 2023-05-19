@@ -1,4 +1,9 @@
-﻿namespace SharedLibrary.Instructions.ALU.ShiftAndRotate
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
+using SharedLibrary.AddressingModes.Misc;
+using SharedLibrary.AddressingModes.ZeroPage;
+
+namespace SharedLibrary.Instructions.ALU.ShiftAndRotate
 {
     /// <summary>
     /// <para>Arithmetic Shift Left</para>
@@ -22,13 +27,13 @@
     {
         public override string Name => "ASL";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
-            [RegexPatterns.Absolute] = 0x0E,
-            [RegexPatterns.AbsoluteX] = 0x1E,
-            [RegexPatterns.Accumulator] = 0x0A,
-            [RegexPatterns.ZP] = 0x06,
-            [RegexPatterns.ZPX] = 0x16
+            [Absolute.Instance] = new InstructionInfo(0x0E, Absolute.Instance),
+            [AbsoluteX.Instance] = new InstructionInfo(0x1E, AbsoluteX.Instance),
+            [Implied.Instance] = new InstructionInfo(0x0A, Implied.Instance),
+            [ZeroPage.Instance] = new InstructionInfo(0x06, ZeroPage.Instance),
+            [ZeroPageX.Instance] = new InstructionInfo(0x16, ZeroPageX.Instance)
         };
 
         public ASL() { }

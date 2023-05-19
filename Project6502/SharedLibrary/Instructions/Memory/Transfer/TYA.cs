@@ -1,4 +1,7 @@
-﻿namespace SharedLibrary.Instructions.LSU.Transfer
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Misc;
+
+namespace SharedLibrary.Instructions.LSU.Transfer
 {
     /// <summary>
     /// <para>Transfer Index Y To Accumulator</para>
@@ -18,20 +21,12 @@
     {
         public override string Name => "TYA";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0x98;
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
+        {
+            [Implied.Instance] = new InstructionInfo(0x98, Implied.Instance)
+        };
 
         public TYA() { }
         public TYA(byte[] instructionData) => this.instructionData = instructionData;
-
-        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
-        {
-            if (!OpcodeToInstructionLength.ContainsKey(opcode))
-            {
-                OpcodeToInstructionLength.Add(opcode, 1);
-            }
-
-            return new byte[] { opcode };
-        }
     }
 }

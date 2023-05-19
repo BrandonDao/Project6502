@@ -1,4 +1,8 @@
-﻿namespace SharedLibrary.Instructions.ALU.IncrementAndDecrement
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
+using SharedLibrary.AddressingModes.ZeroPage;
+
+namespace SharedLibrary.Instructions.ALU.IncrementAndDecrement
 {
     /// <summary>
     /// <para>Decrement Memory By One</para>
@@ -18,12 +22,12 @@
     {
         public override string Name => "DEC";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
-            [RegexPatterns.Absolute] = 0xCE,
-            [RegexPatterns.AbsoluteX] = 0xDE,
-            [RegexPatterns.ZP] = 0xC6,
-            [RegexPatterns.ZPX] = 0xD6
+            [Absolute.Instance] = new InstructionInfo(0xCE, Absolute.Instance),
+            [AbsoluteX.Instance] = new InstructionInfo(0xDE, AbsoluteX.Instance),
+            [ZeroPage.Instance] = new InstructionInfo(0xC6, ZeroPage.Instance),
+            [ZeroPageX.Instance] = new InstructionInfo(0xD6, ZeroPageX.Instance)
         };
 
         public DEC() { }

@@ -1,4 +1,7 @@
-﻿namespace SharedLibrary.Instructions.ALU.IncrementAndDecrement
+﻿using SharedLibrary.AddressingModes.Misc;
+using SharedLibrary.AddressingModes;
+
+namespace SharedLibrary.Instructions.ALU.IncrementAndDecrement
 {
     /// <summary>
     /// <para>Increment Index Register Y By One</para>
@@ -18,20 +21,12 @@
     {
         public override string Name => "INY";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0xC8;
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
+        {
+            [Implied.Instance] = new InstructionInfo(0xC8, Implied.Instance)
+        };
 
         public INY() { }
         public INY(byte[] instructionData) => this.instructionData = instructionData;
-
-        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
-        {
-            if (!OpcodeToInstructionLength.ContainsKey(opcode))
-            {
-                OpcodeToInstructionLength.Add(opcode, 1);
-            }
-
-            return new byte[] { opcode };
-        }
     }
 }

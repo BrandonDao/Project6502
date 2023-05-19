@@ -13,6 +13,7 @@ namespace SharedLibrary.Instructions
 
         protected byte[] instructionData;
 
+
         private const string labelPattern = @"^ *([a-z]+):";
         private static Dictionary<string, Instruction> instructionByNamePattern;
         private static Dictionary<byte, InstructionInfo> instructionInfoByOpcode;
@@ -103,8 +104,6 @@ namespace SharedLibrary.Instructions
         private static void ConvertLineToIL(ref string line, byte opcode)
             => line = opcode.ToString("X2") + line.Substring(3);
 
-
-
         private static List<string> ParseAssembly(string[] assemblyInstructions)
         {
             SetupMaps(out Instruction[] allInstructions);
@@ -156,7 +155,7 @@ namespace SharedLibrary.Instructions
 
             return ILInstructions;
         }
-
+        
         private static List<Instruction> ParseIL(List<string> ILInstructions)
         {
             var parsedInstructions = new List<Instruction>(ILInstructions.Count);

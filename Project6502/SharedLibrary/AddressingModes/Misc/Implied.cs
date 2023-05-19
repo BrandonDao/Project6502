@@ -6,9 +6,10 @@
 
         public string Pattern => @"^ *\Z";
         public byte InstructionLength => 1;
-        public byte[] Parse(byte opcode, string address) => new byte[]
-        {
-            opcode
-        };
+        public byte[] Parse(byte opcode, string address)
+            => new byte[]
+            {
+                opcode
+            };
     }
 }

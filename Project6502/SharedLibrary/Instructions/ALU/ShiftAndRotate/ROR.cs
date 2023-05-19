@@ -1,4 +1,9 @@
-﻿namespace SharedLibrary.Instructions.ALU.ShiftAndRotate
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
+using SharedLibrary.AddressingModes.Misc;
+using SharedLibrary.AddressingModes.ZeroPage;
+
+namespace SharedLibrary.Instructions.ALU.ShiftAndRotate
 {
     /// <summary>
     /// <para>Rotate Left</para>
@@ -23,13 +28,13 @@
     {
         public override string Name => "ROR";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
-            [RegexPatterns.Absolute] = 0x6E,
-            [RegexPatterns.AbsoluteX] = 0x7E,
-            [RegexPatterns.Accumulator] = 0x6A,
-            [RegexPatterns.ZP] = 0x66,
-            [RegexPatterns.ZPX] = 0x76
+            [Absolute.Instance] = new InstructionInfo(0x6E, Absolute.Instance),
+            [AbsoluteX.Instance] = new InstructionInfo(0x7E, AbsoluteX.Instance),
+            [Implied.Instance] = new InstructionInfo(0x6A, Implied.Instance),
+            [ZeroPage.Instance] = new InstructionInfo(0x66, ZeroPage.Instance),
+            [ZeroPageX.Instance] = new InstructionInfo(0x76, ZeroPageX.Instance)
         };
 
         public ROR() { }

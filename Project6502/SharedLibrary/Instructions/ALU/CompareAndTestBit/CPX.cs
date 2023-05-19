@@ -1,4 +1,9 @@
-﻿namespace SharedLibrary.Instructions.ALU.CompareAndTestBit
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
+using SharedLibrary.AddressingModes.Misc;
+using SharedLibrary.AddressingModes.ZeroPage;
+
+namespace SharedLibrary.Instructions.ALU.CompareAndTestBit
 {
     /// <summary>
     /// <para>Compare Index Register X To Memory</para>
@@ -23,11 +28,11 @@
     {
         public override string Name => "CPX";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
-            [RegexPatterns.Absolute] = 0xEC,
-            [RegexPatterns.Immediate] = 0xE0,
-            [RegexPatterns.ZP] = 0xE4
+            [Absolute.Instance] = new InstructionInfo(0xEC, Absolute.Instance),
+            [Immediate.Instance] = new InstructionInfo(0xE0, Immediate.Instance),
+            [ZeroPage.Instance] = new InstructionInfo(0xE4, ZeroPage.Instance)
         };
 
         public CPX() { }

@@ -1,4 +1,7 @@
-﻿namespace SharedLibrary.Instructions.SetAndClearFlags
+﻿using SharedLibrary.AddressingModes.Misc;
+using SharedLibrary.AddressingModes;
+
+namespace SharedLibrary.Instructions.SetAndClearFlags
 {
     /// <summary>
     /// <para>Set Decimal Mode</para>
@@ -14,20 +17,12 @@
     {
         public override string Name => "SED";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0xF8;
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
+        {
+            [Implied.Instance] = new InstructionInfo(0xF8, Implied.Instance)
+        };
 
         public SED() { }
         public SED(byte[] instructionData) => this.instructionData = instructionData;
-
-        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
-        {
-            if (!OpcodeToInstructionLength.ContainsKey(opcode))
-            {
-                OpcodeToInstructionLength.Add(opcode, 1);
-            }
-
-            return new byte[] { opcode };
-        }
     }
 }
