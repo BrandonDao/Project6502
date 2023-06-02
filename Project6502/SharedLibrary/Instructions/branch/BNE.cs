@@ -12,7 +12,8 @@ namespace SharedLibrary.Instructions.Branch
 
         public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
-            [Implied.Instance] = new InstructionInfo(0xD0, Implied.Instance)
+            [Relative.Instance] = new InstructionInfo(0xD0, Relative.Instance),
+            [RelativeLabeled.Instance] = new InstructionInfo(0xD0, RelativeLabeled.Instance)
         };
 
         public BNE() { }

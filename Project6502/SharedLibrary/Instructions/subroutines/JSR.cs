@@ -12,7 +12,8 @@ namespace SharedLibrary.Instructions.Subroutines
 
         public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
-            [Absolute.Instance] = new InstructionInfo(0x20, Absolute.Instance)
+            [Absolute.Instance] = new InstructionInfo(0x20, Absolute.Instance),
+            [AbsoluteLabeled.Instance] = new InstructionInfo(0x20, AbsoluteLabeled.Instance)
         };
 
         public JSR() { }

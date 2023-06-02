@@ -1,4 +1,5 @@
 ﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
 using SharedLibrary.AddressingModes.Misc;
 
 namespace SharedLibrary.Instructions.Branch
@@ -12,7 +13,8 @@ namespace SharedLibrary.Instructions.Branch
 
         public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
-            [Implied.Instance] = new InstructionInfo(0xB0, Implied.Instance)
+            [Relative.Instance] = new InstructionInfo(0xB0, Relative.Instance),
+            [RelativeLabeled.Instance] = new InstructionInfo(0xB0, RelativeLabeled.Instance)
         };
 
         public BCS() { }

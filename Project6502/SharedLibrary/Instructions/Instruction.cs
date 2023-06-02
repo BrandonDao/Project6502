@@ -1,5 +1,6 @@
 ﻿using SharedLibrary.AddressingModes;
 using SharedLibrary.AddressingModes.Absolute;
+using SharedLibrary.AddressingModes.Misc;
 using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -40,9 +41,9 @@ namespace SharedLibrary.Instructions
 
             return machineCode;
         }
-        
 
-        
+
+
         private static void SetupMaps(out Instruction[] validInstructions)
         {
 #pragma warning disable // possible null reference
@@ -81,7 +82,7 @@ namespace SharedLibrary.Instructions
             {
                 foreach (var info in instruction.AddressingModeToInfo.Values)
                 {
-                    if (info.AddressingMode == AbsoluteLabeled.Instance) continue;
+                    if (info.AddressingMode == AbsoluteLabeled.Instance || info.AddressingMode == RelativeLabeled.Instance) continue;
 
                     info.InstructionType = instruction.GetType();
                     instructionInfoByOpcode.Add(info.Opcode, info);
@@ -116,7 +117,7 @@ namespace SharedLibrary.Instructions
                 string line = assemblyInstructions[lineNum];
                 FormatLine(ref line);
 
-                var labelMatch = Regex.Match(line, labelPattern);
+                var labelMatch = Regex.Match(line, labelPattern, RegexOptions.IgnoreCase);
                 if (labelMatch.Success)
                 {
                     labelToPosition.Add(labelMatch.Groups[1].Value, (short)(position));
@@ -132,11 +133,10 @@ namespace SharedLibrary.Instructions
                     }
 
                     var instruction = (Instruction)Activator.CreateInstance(instructionByNamePattern[namePattern].GetType());
+                    string address = line.Substring(3);
 
                     foreach (IAddressingMode addressingMode in instruction.AddressingModeToInfo.Keys)
                     {
-                        string address = line.Substring(3);
-
                         var addressingModeMatch = Regex.Match(address, addressingMode.Pattern, RegexOptions.IgnoreCase);
                         if (!addressingModeMatch.Success)
                         {
@@ -155,7 +155,7 @@ namespace SharedLibrary.Instructions
 
             return ILInstructions;
         }
-        
+
         private static List<Instruction> ParseIL(List<string> ILInstructions)
         {
             var parsedInstructions = new List<Instruction>(ILInstructions.Count);
@@ -173,17 +173,26 @@ namespace SharedLibrary.Instructions
                 else
                 {
                     opcode = byte.Parse(instruction[..2], NumberStyles.AllowHexSpecifier);
-
                     address = instruction[3..].TrimStart();
+                }
+                
 
-                    if (Regex.Match(address[0].ToString(), @"[\(\$#]").Success == false)
+                IAddressingMode addressingMode = instructionInfoByOpcode[opcode].AddressingMode;
+
+                if(address.Length != 0 && Regex.Match(address[0].ToString(), @"[\(\$#]").Success == false)
+                {
+                    if (addressingMode == Absolute.Instance)
                     {
                         string temp = labelToPosition[address].ToString("X4");
                         address = temp[2..] + temp[..2];
                     }
-                }               
+                    else if (addressingMode == Relative.Instance)
+                    {
+                        address = ((byte)(labelToPosition[address] - machineCodeLength - addressingMode.InstructionLength)).ToString("X2");
+                    }
+                }
+                
 
-                IAddressingMode addressingMode = instructionInfoByOpcode[opcode].AddressingMode;
                 byte[] machineCode = addressingMode.Parse(opcode, address);
                 machineCodeLength += (short)machineCode.Length;
 

@@ -30,7 +30,7 @@ namespace SharedLibrary.Instructions.ALU.Arithmetic
     /// <remarks>Note: On the MOS 6502, the N, V, and Z flags in decimal mode don't match the result</remarks>
     public class SBC : Instruction
     {
-        public override string Name => "ADC";
+        public override string Name => "SBC";
 
         public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {

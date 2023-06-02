@@ -13,9 +13,9 @@ namespace SharedLibrary.Instructions.LSU.LoadAndStore
 
         public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
-            [Absolute.Instance] = new InstructionInfo(0x8E, Absolute.Instance),
-            [ZeroPage.Instance] = new InstructionInfo(0x86, ZeroPage.Instance),
-            [ZeroPageY.Instance] = new InstructionInfo(0x96, ZeroPageY.Instance)
+            [Absolute.Instance] = new InstructionInfo(0x8C, Absolute.Instance),
+            [ZeroPage.Instance] = new InstructionInfo(0x84, ZeroPage.Instance),
+            [ZeroPageY.Instance] = new InstructionInfo(0x94, ZeroPageY.Instance)
         };
 
         public STY() { }
