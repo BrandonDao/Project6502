@@ -1,4 +1,7 @@
-﻿namespace SharedLibrary.Instructions.Subroutines
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
+
+namespace SharedLibrary.Instructions.Subroutines
 {
     /// <summary>
     /// <para>Jump To Subroutine</para>
@@ -7,20 +10,13 @@
     {
         public override string Name => "JSR";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0x20;
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
+        {
+            [Absolute.Instance] = new InstructionInfo(0x20, Absolute.Instance),
+            [AbsoluteLabeled.Instance] = new InstructionInfo(0x20, AbsoluteLabeled.Instance)
+        };
 
         public JSR() { }
         public JSR(byte[] instructionData) => this.instructionData = instructionData;
-
-        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
-        {
-            if (!OpcodeToInstructionLength.ContainsKey(opcode))
-            {
-                OpcodeToInstructionLength.Add(opcode, 1);
-            }
-
-            return new byte[] { opcode };
-        }
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace SharedLibrary.Instructions.Memory.Transfer
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Misc;
+
+namespace SharedLibrary.Instructions.Memory.Transfer
 {
     /// <summary>
     /// <para>Transfer Stack Pointer To Index X</para>
@@ -18,20 +21,12 @@
     {
         public override string Name => "TSX";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0xBA;
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
+        {
+            [Implied.Instance] = new InstructionInfo(0xBA, Implied.Instance)
+        };
 
         public TSX() { }
         public TSX(byte[] instructionData) => this.instructionData = instructionData;
-
-        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
-        {
-            if (!OpcodeToInstructionLength.ContainsKey(opcode))
-            {
-                OpcodeToInstructionLength.Add(opcode, 1);
-            }
-
-            return new byte[] { opcode };
-        }
     }
 }

@@ -1,4 +1,9 @@
-﻿namespace SharedLibrary.Instructions.LSU.LoadAndStore
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
+using SharedLibrary.AddressingModes.Misc;
+using SharedLibrary.AddressingModes.ZeroPage;
+
+namespace SharedLibrary.Instructions.LSU.LoadAndStore
 {
     /// <summary>
     /// <para>Load Accumulator with Memory</para>
@@ -18,16 +23,16 @@
     {
         public override string Name => "LDA";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
-            [RegexPatterns.Absolute] = 0xAD,
-            [RegexPatterns.AbsoluteX] = 0xBD,
-            [RegexPatterns.AbsoluteY] = 0xB9,
-            [RegexPatterns.Immediate] = 0xA9,
-            [RegexPatterns.ZP] = 0xA5,
-            [RegexPatterns.ZPX] = 0xB5,
-            [RegexPatterns.ZPXIndirect] = 0xA1,
-            [RegexPatterns.ZPIndirectY] = 0xB1
+            [Absolute.Instance] = new InstructionInfo(0xAD, Absolute.Instance),
+            [AbsoluteX.Instance] = new InstructionInfo(0xBD, AbsoluteX.Instance),
+            [AbsoluteY.Instance] = new InstructionInfo(0xB9, AbsoluteY.Instance),
+            [Immediate.Instance] = new InstructionInfo(0xA9, Immediate.Instance),
+            [ZeroPage.Instance] = new InstructionInfo(0xA5, ZeroPage.Instance),
+            [ZeroPageX.Instance] = new InstructionInfo(0xB5, ZeroPageX.Instance),
+            [ZeroPageXIndirect.Instance] = new InstructionInfo(0xA1, ZeroPageXIndirect.Instance),
+            [ZeroPageIndirectY.Instance] = new InstructionInfo(0xB1, ZeroPageIndirectY.Instance)
         };
 
         public LDA() { }

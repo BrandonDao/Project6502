@@ -1,4 +1,7 @@
-﻿namespace SharedLibrary.Instructions.Memory.Stack
+﻿using SharedLibrary.AddressingModes.Misc;
+using SharedLibrary.AddressingModes;
+
+namespace SharedLibrary.Instructions.Memory.Stack
 {
     /// <summary>
     /// <para>Pull Processor Status From Stack</para>
@@ -38,20 +41,12 @@
     {
         public override string Name => "PLP";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0x28;
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
+        {
+            [Implied.Instance] = new InstructionInfo(0x28, Implied.Instance)
+        };
 
         public PLP() { }
         public PLP(byte[] instructionData) => this.instructionData = instructionData;
-
-        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
-        {
-            if (!OpcodeToInstructionLength.ContainsKey(opcode))
-            {
-                OpcodeToInstructionLength.Add(opcode, 1);
-            }
-
-            return new byte[] { opcode };
-        }
     }
 }

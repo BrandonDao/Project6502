@@ -1,4 +1,7 @@
-﻿namespace SharedLibrary.Instructions.Stack
+﻿using SharedLibrary.AddressingModes.Misc;
+using SharedLibrary.AddressingModes;
+
+namespace SharedLibrary.Instructions.Stack
 {
     /// <summary>
     /// <para>Push Processor Status On Stack</para>
@@ -7,20 +10,12 @@
     {
         public override string Name => "PHP";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0x08;
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
+        {
+            [Implied.Instance] = new InstructionInfo(0x08, Implied.Instance)
+        };
 
         public PHP() { }
         public PHP(byte[] instructionData) => this.instructionData = instructionData;
-
-        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
-        {
-            if (!OpcodeToInstructionLength.ContainsKey(opcode))
-            {
-                OpcodeToInstructionLength.Add(opcode, 1);
-            }
-
-            return new byte[] { opcode };
-        }
     }
 }

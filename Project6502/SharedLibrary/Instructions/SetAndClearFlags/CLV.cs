@@ -1,4 +1,7 @@
-﻿namespace SharedLibrary.Instructions.SetAndClearFlags
+﻿using SharedLibrary.AddressingModes.Misc;
+using SharedLibrary.AddressingModes;
+
+namespace SharedLibrary.Instructions.SetAndClearFlags
 {
     /// <summary>
     /// <para>Clear Overflow Flag</para>
@@ -14,20 +17,12 @@
     {
         public override string Name => "CLV";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0xB8;
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
+        {
+            [Implied.Instance] = new InstructionInfo(0xB8, Implied.Instance)
+        };
 
         public CLV() { }
         public CLV(byte[] instructionData) => this.instructionData = instructionData;
-
-        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
-        {
-            if (!OpcodeToInstructionLength.ContainsKey(opcode))
-            {
-                OpcodeToInstructionLength.Add(opcode, 1);
-            }
-
-            return new byte[] { opcode };
-        }
     }
 }

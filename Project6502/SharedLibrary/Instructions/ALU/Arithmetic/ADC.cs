@@ -1,5 +1,7 @@
-﻿using SharedLibrary.Instructions.ALU.CompareAndTestBit;
-using System.Collections.Generic;
+﻿using SharedLibrary.AddressingModes.Misc;
+using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
+using SharedLibrary.AddressingModes.ZeroPage;
 
 namespace SharedLibrary.Instructions.ALU.Arithmetic
 {
@@ -29,16 +31,16 @@ namespace SharedLibrary.Instructions.ALU.Arithmetic
     {
         public override string Name => "ADC";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
-            [RegexPatterns.Absolute] = 0x6D,
-            [RegexPatterns.AbsoluteX] = 0x7D,
-            [RegexPatterns.AbsoluteY] = 0x79,
-            [RegexPatterns.Immediate] = 0x69,
-            [RegexPatterns.ZP] = 0x65,
-            [RegexPatterns.ZPX] = 0x75,
-            [RegexPatterns.ZPXIndirect] = 0x61,
-            [RegexPatterns.ZPIndirectY] = 0x71
+            [Absolute.Instance] = new InstructionInfo(0x6D, Absolute.Instance),
+            [AbsoluteX.Instance] = new InstructionInfo(0x7D, AbsoluteX.Instance),
+            [AbsoluteY.Instance] = new InstructionInfo(0x79, AbsoluteY.Instance),
+            [Immediate.Instance] = new InstructionInfo(0x69, Immediate.Instance),
+            [ZeroPage.Instance] = new InstructionInfo(0x65, ZeroPage.Instance),
+            [ZeroPageX.Instance] = new InstructionInfo(0x75, ZeroPageX.Instance),
+            [ZeroPageXIndirect.Instance] = new InstructionInfo(0x61, ZeroPageXIndirect.Instance),
+            [ZeroPageIndirectY.Instance] = new InstructionInfo(0x71, ZeroPageIndirectY.Instance)
         };
 
         public ADC() { }

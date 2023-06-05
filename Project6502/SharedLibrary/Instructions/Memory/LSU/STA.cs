@@ -1,4 +1,8 @@
-﻿namespace SharedLibrary.Instructions.LSU.LoadAndStore
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
+using SharedLibrary.AddressingModes.ZeroPage;
+
+namespace SharedLibrary.Instructions.LSU.LoadAndStore
 {
     /// <summary>
     /// <para>Store Accumulator in Memory</para>
@@ -7,15 +11,15 @@
     {
         public override string Name => "STA";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
-            [RegexPatterns.Absolute] = 0x8D,
-            [RegexPatterns.AbsoluteX] = 0x9D,
-            [RegexPatterns.AbsoluteY] = 0x99,
-            [RegexPatterns.ZP] = 0x85,
-            [RegexPatterns.ZPX] = 0x95,
-            [RegexPatterns.ZPXIndirect] = 0x81,
-            [RegexPatterns.ZPIndirectY] = 0x91
+            [Absolute.Instance] = new InstructionInfo(0x8D, Absolute.Instance),
+            [AbsoluteX.Instance] = new InstructionInfo(0x9D, AbsoluteX.Instance),
+            [AbsoluteY.Instance] = new InstructionInfo(0x99, AbsoluteY.Instance),
+            [ZeroPage.Instance] = new InstructionInfo(0x85, ZeroPage.Instance),
+            [ZeroPageX.Instance] = new InstructionInfo(0x95, ZeroPageX.Instance),
+            [ZeroPageXIndirect.Instance] = new InstructionInfo(0x81, ZeroPageXIndirect.Instance),
+            [ZeroPageIndirectY.Instance] = new InstructionInfo(0x91, ZeroPageIndirectY.Instance)
         };
 
         public STA() { }

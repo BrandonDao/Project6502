@@ -1,4 +1,9 @@
-﻿namespace SharedLibrary.Instructions.LSU.LoadAndStore
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
+using SharedLibrary.AddressingModes.Misc;
+using SharedLibrary.AddressingModes.ZeroPage;
+
+namespace SharedLibrary.Instructions.LSU.LoadAndStore
 {
     /// <summary>
     /// <para>Load Index Register X From Memory</para>
@@ -18,13 +23,13 @@
     {
         public override string Name => "LDX";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
-            [RegexPatterns.Absolute] = 0xAE,
-            [RegexPatterns.AbsoluteY] = 0xBE,
-            [RegexPatterns.Immediate] = 0xA2,
-            [RegexPatterns.ZP] = 0xA6,
-            [RegexPatterns.ZPY] = 0xB6
+            [Absolute.Instance] = new InstructionInfo(0xAE, Absolute.Instance),
+            [AbsoluteY.Instance] = new InstructionInfo(0xBE, AbsoluteY.Instance),
+            [Immediate.Instance] = new InstructionInfo(0xA2, Immediate.Instance),
+            [ZeroPage.Instance] = new InstructionInfo(0xA6, ZeroPage.Instance),
+            [ZeroPageY.Instance] = new InstructionInfo(0xB6, ZeroPageY.Instance)
         };
 
         public LDX() { }

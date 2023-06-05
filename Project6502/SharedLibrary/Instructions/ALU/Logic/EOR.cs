@@ -1,4 +1,9 @@
-﻿namespace SharedLibrary.Instructions.ALU.Logic
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
+using SharedLibrary.AddressingModes.Misc;
+using SharedLibrary.AddressingModes.ZeroPage;
+
+namespace SharedLibrary.Instructions.ALU.Logic
 {
     /// <summary>
     /// <para>"Exclusive OR" Memory with Accumulator</para>
@@ -18,16 +23,16 @@
     {
         public override string Name => "EOR";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
-            [RegexPatterns.Absolute] = 0x4D,
-            [RegexPatterns.AbsoluteX] = 0x5D,
-            [RegexPatterns.AbsoluteY] = 0x59,
-            [RegexPatterns.Immediate] = 0x49,
-            [RegexPatterns.ZP] = 0x45,
-            [RegexPatterns.ZPX] = 0x55,
-            [RegexPatterns.ZPXIndirect] = 0x41,
-            [RegexPatterns.ZPIndirectY] = 0x51,
+            [Absolute.Instance] = new InstructionInfo(0x4D, Absolute.Instance),
+            [AbsoluteX.Instance] = new InstructionInfo(0x5D, AbsoluteX.Instance),
+            [AbsoluteY.Instance] = new InstructionInfo(0x59, AbsoluteY.Instance),
+            [Immediate.Instance] = new InstructionInfo(0x49, Immediate.Instance),
+            [ZeroPage.Instance] = new InstructionInfo(0x45, ZeroPage.Instance),
+            [ZeroPageX.Instance] = new InstructionInfo(0x55, ZeroPageX.Instance),
+            [ZeroPageXIndirect.Instance] = new InstructionInfo(0x41, ZeroPageXIndirect.Instance),
+            [ZeroPageIndirectY.Instance] = new InstructionInfo(0x51, ZeroPageIndirectY.Instance),
         };
 
         public EOR() { }

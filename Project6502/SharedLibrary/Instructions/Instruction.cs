@@ -1,4 +1,7 @@
-﻿using System.Globalization;
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
+using SharedLibrary.AddressingModes.Misc;
+using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -6,29 +9,55 @@ namespace SharedLibrary.Instructions
 {
     public abstract class Instruction
     {
-        public static Dictionary<string, short> LabelToLineNum = new();
-        public static Dictionary<byte, byte> OpcodeToInstructionLength = new();
-
-#pragma warning disable // Potentially null variables are actually guaranteed to be not-null by runtime
         public abstract string Name { get; }
-        public abstract Dictionary<string, byte> AddressingPatternToOpcode { get; }
-        public byte Opcode => instructionData[0];
+        public abstract Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo { get; }
 
         protected byte[] instructionData;
 
-        private static Instruction[] GetAllInstructions()
+
+        private const string labelPattern = @"^ *([a-z]+):";
+        private static Dictionary<string, Instruction> instructionByNamePattern;
+        private static Dictionary<byte, InstructionInfo> instructionInfoByOpcode;
+        private static Dictionary<string, short> labelToPosition;
+        private static short machineCodeLength;
+
+
+        public static List<Instruction> Parse(string[] asmInstructions)
+            => ParseIL(ParseAssembly(asmInstructions));
+
+        public static byte[] ToByteArray(List<Instruction> instructions)
         {
+            var machineCode = new byte[machineCodeLength];
+            int index = 0;
+
+            foreach (var instruction in instructions)
+            {
+                foreach (byte b in instruction.instructionData)
+                {
+                    machineCode[index] = b;
+                    index++;
+                }
+            }
+
+            return machineCode;
+        }
+
+
+
+        private static void SetupMaps(out Instruction[] validInstructions)
+        {
+#pragma warning disable // possible null reference
             var allInstructions = Assembly
                 .GetAssembly(typeof(Instruction))
                 .GetTypes()
                 .Where(type => type.IsSubclassOf(typeof(Instruction)));
 
-            var output = allInstructions
+            var instantiatedInstructions = allInstructions
                 .Where(type => type.GetConstructors().Length == 2)
                 .Select(type => (Instruction)Activator.CreateInstance(type))
                 .ToArray();
 
-            if (output.Length != allInstructions.Count())
+            if (instantiatedInstructions.Length != allInstructions.Count())
             {
                 string invalidInstructions = "";
 
@@ -43,120 +72,136 @@ namespace SharedLibrary.Instructions
                 throw new NotImplementedException($"{invalidInstructions} do not contain valid constructors");
             }
 
-            return output;
-        }
-        private static void IndexLabels(string[] asmInstructions)
-        {
-            short lineNum = 0x0600;
+            validInstructions = instantiatedInstructions;
+            instructionByNamePattern = validInstructions.ToDictionary(type => ("^" + type.Name + @"( |\Z)"), type => type);
 
-            foreach (string line in asmInstructions)
+            labelToPosition = new Dictionary<string, short>();
+
+            instructionInfoByOpcode = new Dictionary<byte, InstructionInfo>();
+            foreach (Instruction instruction in validInstructions)
             {
-                if (Regex.Match(line, RegexPatterns.Empty).Success)
+                foreach (var info in instruction.AddressingModeToInfo.Values)
                 {
-                    continue;
-                }
+                    if (info.AddressingMode == AbsoluteLabeled.Instance || info.AddressingMode == RelativeLabeled.Instance) continue;
 
-                var match = Regex.Match(line, RegexPatterns.Label);
-
-                if (!match.Success)
-                {
-                    lineNum++;
-                    continue;
+                    info.InstructionType = instruction.GetType();
+                    instructionInfoByOpcode.Add(info.Opcode, info);
                 }
-                LabelToLineNum.Add(match.Groups[1].Value, lineNum);
             }
-        }
+
 #pragma warning enable
+        }
 
-        protected virtual byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
+        private static void FormatLine(ref string line)
         {
-            foreach (var regexPattern in instruction.AddressingPatternToOpcode.Keys)
+            int commentIndex = line.IndexOf(';');
+            if (commentIndex != -1)
             {
-                var match = Regex.Match(asmInstruction, regexPattern, RegexOptions.IgnoreCase);
+                line = line.Substring(0, commentIndex);
+            }
 
-                if (!match.Success) continue;
+            line = line.Trim();
+        }
+        private static void ConvertLineToIL(ref string line, byte opcode)
+            => line = opcode.ToString("X2") + line.Substring(3);
 
-                byte[] data;
-                byte opcode = instruction.AddressingPatternToOpcode[regexPattern];
-                short address = short.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier);
+        private static List<string> ParseAssembly(string[] assemblyInstructions)
+        {
+            SetupMaps(out Instruction[] allInstructions);
 
-                if (regexPattern.Equals(RegexPatterns.Accumulator))
+            List<string> ILInstructions = new();
+            short position = 0x00;
+
+            for (int lineNum = 0; lineNum < assemblyInstructions.Length; lineNum++)
+            {
+                string line = assemblyInstructions[lineNum];
+                FormatLine(ref line);
+
+                var labelMatch = Regex.Match(line, labelPattern, RegexOptions.IgnoreCase);
+                if (labelMatch.Success)
                 {
-                    data = new byte[] { opcode };
+                    labelToPosition.Add(labelMatch.Groups[1].Value, (short)(position));
+                    continue;
+                }
+
+                foreach (string namePattern in instructionByNamePattern.Keys)
+                {
+                    var nameMatch = Regex.Match(line, namePattern, RegexOptions.IgnoreCase);
+                    if (!nameMatch.Success)
+                    {
+                        continue;
+                    }
+
+                    var instruction = (Instruction)Activator.CreateInstance(instructionByNamePattern[namePattern].GetType());
+                    string address = line.Substring(3);
+
+                    foreach (IAddressingMode addressingMode in instruction.AddressingModeToInfo.Keys)
+                    {
+                        var addressingModeMatch = Regex.Match(address, addressingMode.Pattern, RegexOptions.IgnoreCase);
+                        if (!addressingModeMatch.Success)
+                        {
+                            continue;
+                        }
+
+                        ConvertLineToIL(ref line, instruction.AddressingModeToInfo[addressingMode].Opcode);
+
+                        position += addressingMode.InstructionLength;
+                        ILInstructions.Add(line);
+                        break;
+                    }
+                    break;
+                }
+            }
+
+            return ILInstructions;
+        }
+
+        private static List<Instruction> ParseIL(List<string> ILInstructions)
+        {
+            var parsedInstructions = new List<Instruction>(ILInstructions.Count);
+
+            foreach (string instruction in ILInstructions)
+            {
+                byte opcode;
+                string address;
+
+                if (instruction.Length == 2)
+                {
+                    opcode = byte.Parse(instruction, NumberStyles.AllowHexSpecifier);
+                    address = "";
                 }
                 else
                 {
-                    byte msb = (byte)((address & 0xFF00) >> 8);
-                    byte lsb = (byte)((address & 0x00FF));
-
-                    data = msb != 0
-                        ? new byte[] { opcode, lsb, msb }
-                        : new byte[] { opcode, lsb };
+                    opcode = byte.Parse(instruction[..2], NumberStyles.AllowHexSpecifier);
+                    address = instruction[3..].TrimStart();
                 }
+                
 
-                if (!OpcodeToInstructionLength.ContainsKey(opcode))
+                IAddressingMode addressingMode = instructionInfoByOpcode[opcode].AddressingMode;
+
+                if(address.Length != 0 && Regex.Match(address[0].ToString(), @"[\(\$#]").Success == false)
                 {
-                    OpcodeToInstructionLength.Add(opcode, (byte)data.Length);
+                    if (addressingMode == Absolute.Instance)
+                    {
+                        string temp = labelToPosition[address].ToString("X4");
+                        address = temp[2..] + temp[..2];
+                    }
+                    else if (addressingMode == Relative.Instance)
+                    {
+                        address = ((byte)(labelToPosition[address] - machineCodeLength - addressingMode.InstructionLength)).ToString("X2");
+                    }
                 }
+                
 
-                return data;
+                byte[] machineCode = addressingMode.Parse(opcode, address);
+                machineCodeLength += (short)machineCode.Length;
+
+                Type type = instructionInfoByOpcode[opcode].InstructionType;
+                parsedInstructions.Add((Instruction)Activator.CreateInstance(type, machineCode));
             }
-            throw new ArgumentException("Invalid assembly syntax!", paramName: asmInstruction);
-        }
 
-        public static List<Instruction> Parse(string[] asmInstructions)
-        {
-            // Preprocessing
-            IndexLabels(asmInstructions);
-
-            List<Instruction> parsedInstructions = new(asmInstructions.Length);
-            var allInstructions = GetAllInstructions();
-
-            short lineNum = 0x0600;
-            foreach (string asmInstruction in asmInstructions)
-            {
-                var trimmedAsmInstruction = asmInstruction.TrimStart();
-                if (trimmedAsmInstruction.Equals("")) continue;
-
-                string instructionName = trimmedAsmInstruction[..3].ToUpper();
-
-                foreach (Instruction instruction in allInstructions)
-                {
-                    if (!instruction.Name.Equals(instructionName)) continue;
-
-                    byte[] data = instruction.GetInstructionData(lineNum, trimmedAsmInstruction[3..], instruction);
-                    parsedInstructions.Add((Instruction)Activator.CreateInstance(instruction.GetType(), data));
-                    lineNum++;
-                }
-            }
 
             return parsedInstructions;
-        }
-
-        public static byte[] ToByteArray(List<Instruction> instructions)
-        {
-            // Time O(2n)
-
-            int length = 0;
-
-            foreach (var instruction in instructions)
-            {
-                length += instruction.instructionData.Length;
-            }
-
-            var bytecode = new byte[length];
-            int index = 0;
-
-            foreach (var instruction in instructions)
-            {
-                foreach (byte b in instruction.instructionData)
-                {
-                    bytecode[index] = b;
-                    index++;
-                }
-            }
-
-            return bytecode;
         }
     }
 }

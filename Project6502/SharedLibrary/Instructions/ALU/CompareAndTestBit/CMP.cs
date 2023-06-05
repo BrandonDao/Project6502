@@ -1,4 +1,9 @@
-﻿namespace SharedLibrary.Instructions.ALU.CompareAndTestBit
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
+using SharedLibrary.AddressingModes.Misc;
+using SharedLibrary.AddressingModes.ZeroPage;
+
+namespace SharedLibrary.Instructions.ALU.CompareAndTestBit
 {
     /// <summary>
     /// <para>Compare Memory and Accumulator</para>
@@ -23,16 +28,16 @@
     {
         public override string Name => "CMP";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo=> new()
         {
-            [RegexPatterns.Absolute] = 0xCD,
-            [RegexPatterns.AbsoluteX] = 0xDD,
-            [RegexPatterns.AbsoluteY] = 0xD9,
-            [RegexPatterns.Immediate] = 0xC9,
-            [RegexPatterns.ZP] = 0xC5,
-            [RegexPatterns.ZPX] = 0xD5,
-            [RegexPatterns.ZPXIndirect] = 0xC1,
-            [RegexPatterns.ZPIndirectY] = 0xD1
+            [Absolute.Instance] = new InstructionInfo(0xCD, Absolute.Instance),
+            [AbsoluteX.Instance] = new InstructionInfo(0xDD, AbsoluteX.Instance),
+            [AbsoluteY.Instance] = new InstructionInfo(0xD9, AbsoluteY.Instance),
+            [Immediate.Instance] = new InstructionInfo(0xC9, Immediate.Instance),
+            [ZeroPage.Instance] = new InstructionInfo(0xC5, ZeroPage.Instance),
+            [ZeroPageX.Instance] = new InstructionInfo(0xD5, ZeroPageX.Instance),
+            [ZeroPageXIndirect.Instance] = new InstructionInfo(0xC1, ZeroPageXIndirect.Instance),
+            [ZeroPageIndirectY.Instance] = new InstructionInfo(0xD1, ZeroPageIndirectY.Instance)
         };
 
         public CMP() { }

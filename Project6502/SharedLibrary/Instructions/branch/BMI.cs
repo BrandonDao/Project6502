@@ -1,4 +1,8 @@
-﻿namespace SharedLibrary.Instructions.Branch
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
+using SharedLibrary.AddressingModes.Misc;
+
+namespace SharedLibrary.Instructions.Branch
 {
     /// <summary>
     /// <para>Branch on Result Minus</para>
@@ -7,20 +11,13 @@
     {
         public override string Name => "BMI";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => throw new NotImplementedException("Unused");
-        private const byte opcode = 0x30;
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
+        {
+            [Relative.Instance] = new InstructionInfo(0x30, Relative.Instance),
+            [RelativeLabeled.Instance] = new InstructionInfo(0x30, RelativeLabeled.Instance)
+        };
 
         public BMI() { }
         public BMI(byte[] instructionData) => this.instructionData = instructionData;
-
-        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
-        {
-            if (!OpcodeToInstructionLength.ContainsKey(opcode))
-            {
-                OpcodeToInstructionLength.Add(opcode, 1);
-            }
-
-            return new byte[] { opcode, (byte)(LabelToLineNum[asmInstruction.Trim()] - lineNumber) };
-        }
     }
 }

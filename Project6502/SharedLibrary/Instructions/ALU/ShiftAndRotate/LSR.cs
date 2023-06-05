@@ -1,4 +1,8 @@
-﻿using System.Globalization;
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
+using SharedLibrary.AddressingModes.Misc;
+using SharedLibrary.AddressingModes.ZeroPage;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace SharedLibrary.Instructions.ALU.ShiftAndRotate
@@ -25,28 +29,16 @@ namespace SharedLibrary.Instructions.ALU.ShiftAndRotate
     {
         public override string Name => "LSR";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
-            [RegexPatterns.Absolute] = 0x4E,
-            [RegexPatterns.AbsoluteX] = 0x5E,
-            [RegexPatterns.ZP] = 0x46,
-            [RegexPatterns.ZPX] = 0x56
+            [Absolute.Instance] = new InstructionInfo(0x4E, Absolute.Instance),
+            [AbsoluteX.Instance] = new InstructionInfo(0x5E, AbsoluteX.Instance),
+            [Implied.Instance] = new InstructionInfo(0x4A, Implied.Instance),
+            [ZeroPage.Instance] = new InstructionInfo(0x46, ZeroPage.Instance),
+            [ZeroPageX.Instance] = new InstructionInfo(0x56, ZeroPageX.Instance)
         };
-        private const byte accumulatorOpcode = 0x4A;
 
         public LSR() { }
         public LSR(byte[] instructionData) => this.instructionData = instructionData;
-
-        protected override byte[] GetInstructionData(int lineNumber, string asmInstruction, Instruction instruction)
-        {
-            var match = Regex.Match(asmInstruction, RegexPatterns.Accumulator);
-
-            if(match.Success)
-            {
-                return new byte[] { accumulatorOpcode };
-            }
-
-            return base.GetInstructionData(lineNumber, asmInstruction, instruction);
-        }
     }
 }

@@ -1,4 +1,9 @@
-﻿namespace SharedLibrary.Instructions.ALU.CompareAndTestBit
+﻿using SharedLibrary.AddressingModes;
+using SharedLibrary.AddressingModes.Absolute;
+using SharedLibrary.AddressingModes.Misc;
+using SharedLibrary.AddressingModes.ZeroPage;
+
+namespace SharedLibrary.Instructions.ALU.CompareAndTestBit
 {
     /// <summary>
     /// <para>Test Bits in Memory with Accumulator</para>
@@ -23,11 +28,11 @@
     {
         public override string Name => "BIT";
 
-        public override Dictionary<string, byte> AddressingPatternToOpcode => new()
+        public override Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo => new()
         {
-            [RegexPatterns.Absolute] = 0x2C,
-            [RegexPatterns.Immediate] = 0x89,
-            [RegexPatterns.ZP] = 0x24
+            [Absolute.Instance] = new InstructionInfo(0x2C, Absolute.Instance),
+            [Immediate.Instance] = new InstructionInfo(0x89, Immediate.Instance),
+            [ZeroPage.Instance] = new InstructionInfo(0x24, ZeroPage.Instance)
         };
 
         public BIT() { }
