@@ -18,6 +18,18 @@ namespace SharedLibrary.Instructions.Subroutines
         };
 
         public JMP() { }
-        public JMP(byte[] instructionData) => this.instructionData = instructionData;
+        public JMP(byte[] instructionData) => InstructionData = instructionData;
+
+        public override void Execute(byte opCode, byte[] instructionData, byte[] memory, CPU CPU)
+        {
+            ushort jmpAddress = (ushort)((instructionData[1] << 8) | instructionData[0]);
+
+            if (opCode == 0x6C)
+            {
+                jmpAddress = memory[jmpAddress];
+            }
+
+            CPU.RPC = jmpAddress;
+        }
     }
 }

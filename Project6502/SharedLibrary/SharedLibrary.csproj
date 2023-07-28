@@ -1,9 +1,41 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Instructions\ALU\**" />
+    <Compile Remove="Instructions\Branch\**" />
+    <Compile Remove="Instructions\Memory\Stack\**" />
+    <Compile Remove="Instructions\Memory\Transfer\**" />
+    <Compile Remove="Instructions\Misc\**" />
+    <Compile Remove="Instructions\SetAndClearFlags\**" />
+    <EmbeddedResource Remove="Instructions\ALU\**" />
+    <EmbeddedResource Remove="Instructions\Branch\**" />
+    <EmbeddedResource Remove="Instructions\Memory\Stack\**" />
+    <EmbeddedResource Remove="Instructions\Memory\Transfer\**" />
+    <EmbeddedResource Remove="Instructions\Misc\**" />
+    <EmbeddedResource Remove="Instructions\SetAndClearFlags\**" />
+    <None Remove="Instructions\ALU\**" />
+    <None Remove="Instructions\Branch\**" />
+    <None Remove="Instructions\Memory\Stack\**" />
+    <None Remove="Instructions\Memory\Transfer\**" />
+    <None Remove="Instructions\Misc\**" />
+    <None Remove="Instructions\SetAndClearFlags\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Instructions\Memory\LSU\LDX.cs" />
+    <Compile Remove="Instructions\Memory\LSU\LDY.cs" />
+    <Compile Remove="Instructions\Memory\LSU\STX.cs" />
+    <Compile Remove="Instructions\Memory\LSU\STY.cs" />
+    <Compile Remove="Instructions\Subroutines\BRK.cs" />
+    <Compile Remove="Instructions\Subroutines\JSR.cs" />
+    <Compile Remove="Instructions\Subroutines\RTI.cs" />
+    <Compile Remove="Instructions\Subroutines\RTS.cs" />
+  </ItemGroup>
 
 </Project>
