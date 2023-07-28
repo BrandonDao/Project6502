@@ -4,53 +4,59 @@
     {
         public byte Value { get; set; }
 
-        /// <summary>N Flag</summary>
-        public bool Negative
+        /// <summary>Negative Flag</summary>
+        public bool N
         {
             get => (Value & 0b1000_0000) == 1;
             set => Value = value ? (byte)(Value | 0b1000_0000) : (byte)(Value ^ (Value & 0b1000_0000));
         }
 
-        /// <summary>V Flag</summary>
-        public bool Overflow
+        /// <summary>Overflow Flag</summary>
+        public bool V
         {
             get => (Value & 0b0100_0000) == 1;
             set => Value = value ? (byte)(Value | 0b0100_0000) : (byte)(Value ^ (Value & 0b0100_0000));
         }
 
-        /// <summary>B Flag</summary>
-        public bool Break
+        /// <summary>Break Flag</summary>
+        public bool B
         {
             get => (Value & 0b0010_0000) == 1;
             set => Value = value ? (byte)(Value | 0b0010_0000) : (byte)(Value ^ (Value & 0b0010_0000));
         }
 
-        /// <summary>D Flag</summary>
-        public bool Decimal
+        /// <summary>Decimal Flag</summary>
+        public bool D
         {
             get => (Value & 0b0000_1000) == 1;
             set => Value = value ? (byte)(Value | 0b0000_1000) : (byte)(Value ^ (Value & 0b0000_1000));
         }
 
-        /// <summary>I Flag</summary>
-        public bool InterruptDisable
+        /// <summary>Interrupt Disable Flag</summary>
+        public bool I
         {
             get => (Value & 0b0000_0100) == 1;
             set => Value = value ? (byte)(Value | 0b0000_0100) : (byte)(Value ^ (Value & 0b0000_0100));
         }
 
-        /// <summary>Z Flag</summary>
-        public bool Zero
+        /// <summary>Zero Flag</summary>
+        public bool Z
         {
             get => (Value & 0b0000_0010) == 1;
             set => Value = value ? (byte)(Value | 0b0000_0010) : (byte)(Value ^ (Value & 0b0000_0010));
         }
 
-        /// <summary>C Flag</summary>
-        public bool Carry
+        /// <summary>Carry Flag</summary>
+        public bool C
         {
             get => (Value & 0b0000_0001) == 1;
             set => Value = value ? (byte)(Value | 0b0000_0001) : (byte)(Value ^ (Value & 0b0000_0001));
+        }
+
+
+        public Status()
+        {
+            I = true;
         }
     }
 }

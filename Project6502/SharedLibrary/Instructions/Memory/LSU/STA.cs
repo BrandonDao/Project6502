@@ -22,7 +22,21 @@ namespace SharedLibrary.Instructions.LSU.LoadAndStore
             [ZeroPageIndirectY.Instance] = new InstructionInfo(0x91, ZeroPageIndirectY.Instance)
         };
 
+        private static Dictionary<byte, Action<byte[], byte[], CPU>> OpCodeToExecutor => new()
+        {
+            [0x8D] = (byte[] instructionInfo, byte[] memory, CPU CPU) => { memory[(instructionInfo[1] << 8) | instructionInfo[0]] = CPU.RA; },
+            [0x9D] = (byte[] instructionInfo, byte[] memory, CPU CPU) => { memory[(instructionInfo[1] << 8) | instructionInfo[0] + CPU.RX] = CPU.RA; },
+            [0x99] = (byte[] instructionInfo, byte[] memory, CPU CPU) => { memory[(instructionInfo[1] << 8) | instructionInfo[0] + CPU.RY] = CPU.RA; },
+            [0x85] = (byte[] instructionInfo, byte[] memory, CPU CPU) => { memory[instructionInfo[0]] = CPU.RA; },
+            [0x95] = (byte[] instructionInfo, byte[] memory, CPU CPU) => { memory[instructionInfo[0] + CPU.RX] = CPU.RA; },
+            [0x81] = (byte[] instructionInfo, byte[] memory, CPU CPU) => { memory[memory[instructionInfo[0] << 8 | instructionInfo[0] + CPU.RX]] = CPU.RA; },
+            [0x91] = (byte[] instructionInfo, byte[] memory, CPU CPU) => { memory[memory[instructionInfo[0] << 8 | instructionInfo[0]] + CPU.RY] = CPU.RA; },
+        };
+
         public STA() { }
-        public STA(byte[] instructionData) => this.instructionData = instructionData;
+        public STA(byte[] instructionData) => InstructionData = instructionData;
+
+        public override void Execute(byte opCode, byte[] instructionData, byte[] memory, CPU CPU)
+            => OpCodeToExecutor[opCode].Invoke(instructionData, memory, CPU);
     }
 }

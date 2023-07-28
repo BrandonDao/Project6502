@@ -10,8 +10,8 @@
             => new byte[]
             {
                 opcode,
-                byte.Parse(address[..2], System.Globalization.NumberStyles.AllowHexSpecifier),
-                byte.Parse(address[2..], System.Globalization.NumberStyles.AllowHexSpecifier)
+                byte.Parse(address[1..3], System.Globalization.NumberStyles.AllowHexSpecifier),
+                byte.Parse(address[3..], System.Globalization.NumberStyles.AllowHexSpecifier)
             };
     }
 }
