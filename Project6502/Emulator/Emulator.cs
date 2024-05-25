@@ -45,8 +45,8 @@ namespace Emulator
                 .Select(type => Activator.CreateInstance(type) as Instruction)
                 .ToArray()!;
 
-            instructionInfoByOpCode = new Dictionary<byte, InstructionInfo>();
-            executorByOpcode = new Dictionary<byte, Action<byte, byte[], byte[], CPU>>();
+            instructionInfoByOpCode = [];
+            executorByOpcode = [];
             foreach (Instruction instruction in instantiatedInstructions)
             {
                 foreach (var info in instruction.AddressingModeToInfo.Values)
@@ -85,12 +85,12 @@ namespace Emulator
             byte opCode = Memory[CPU.RPC];
             CPU.RPC++;
 
-            if (!instructionInfoByOpCode.ContainsKey(opCode))
+            if (!instructionInfoByOpCode.TryGetValue(opCode, out InstructionInfo? value))
             {
                 throw new InvalidOperationException($"Invalid assembly, unrecognized opcode: 0x{opCode:X2}!");
             }
 
-            int length = instructionInfoByOpCode[opCode].AddressingMode.InstructionLength - 1;
+            int length = value.AddressingMode.InstructionLength - 1;
             var data = new byte[length];
 
             for (int i = 0; i < length; i++)

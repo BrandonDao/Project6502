@@ -1,6 +1,6 @@
 ﻿namespace SharedLibrary
 {
-    public class CPU
+    public class CPU()
     {
         /// <summary>Accumulator</summary>
         public byte RA { get; set; }
@@ -15,15 +15,9 @@
         public byte SP { get; set; }
 
         /// <summary>Status</summary>
-        public Status RP { get; set; }
+        public Status RP { get; set; } = new Status();
 
         /// <summary>Program Counter</summary>
         public ushort RPC { get; set; }
-
-
-        public CPU()
-        {
-            RP = new Status();
-        }
     }
 }
