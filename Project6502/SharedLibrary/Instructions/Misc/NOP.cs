@@ -16,6 +16,8 @@ namespace SharedLibrary.Instructions.Misc
         };
 
         public NOP() { }
-        public NOP(byte[] instructionData) => this.instructionData = instructionData;
+        public NOP(byte[] instructionData) => InstructionData = instructionData;
+
+        public override void Execute(byte opCode, byte[] instructionData, byte[] memory, CPU CPU) { }
     }
 }

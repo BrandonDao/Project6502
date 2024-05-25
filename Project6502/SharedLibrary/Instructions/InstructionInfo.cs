@@ -1,7 +1,9 @@
 ﻿using SharedLibrary.AddressingModes;
+using System.Diagnostics;
 
 namespace SharedLibrary.Instructions
 {
+    [DebuggerDisplay("{InstructionType.Name} {AddressingMode.GetType().Name}")]
     public class InstructionInfo
     {
         public byte OpCode { get; }

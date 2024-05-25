@@ -68,7 +68,7 @@ namespace SharedLibrary.Instructions
                     .ToList()
                     .ForEach((instruction) => { invalidInstructions += instruction.Name + " + "; });
 
-                invalidInstructions = invalidInstructions.Substring(0, invalidInstructions.Length - 3);
+                invalidInstructions = invalidInstructions[..^3];
 
                 throw new NotImplementedException($"{invalidInstructions} do not contain valid constructors");
             }
@@ -76,9 +76,9 @@ namespace SharedLibrary.Instructions
 
             instructionByNamePattern = validInstructions.ToDictionary(type => ("^" + type.Name + @"( |\Z)"), type => type);
 
-            labelToPosition = new Dictionary<string, short>();
+            labelToPosition = [];
 
-            instructionInfoByOpCode = new Dictionary<byte, InstructionInfo>();
+            instructionInfoByOpCode = [];
             foreach (Instruction instruction in validInstructions)
             {
                 foreach (var info in instruction.AddressingModeToInfo.Values)
@@ -96,19 +96,19 @@ namespace SharedLibrary.Instructions
             int commentIndex = line.IndexOf(';');
             if (commentIndex != -1)
             {
-                line = line.Substring(0, commentIndex);
+                line = line[..commentIndex];
             }
 
             line = line.Trim();
         }
         private static void ConvertLineToIL(ref string line, byte opCode)
-            => line = opCode.ToString("X2") + line.Substring(3);
+            => line = opCode.ToString("X2") + line[3..];
 
         private static List<string> ParseAssembly(string[] assemblyInstructions, ushort memoryStartAddress)
         {
             SetupMaps(out Instruction[] allInstructions);
 
-            List<string> ILInstructions = new();
+            List<string> ILInstructions = [];
             ushort position = memoryStartAddress;
 
             for (int lineNum = 0; lineNum < assemblyInstructions.Length; lineNum++)
@@ -132,7 +132,7 @@ namespace SharedLibrary.Instructions
                     }
 
                     var instruction = (Instruction)Activator.CreateInstance(instructionByNamePattern[namePattern].GetType());
-                    string address = line.Substring(3);
+                    string address = line[3..];
 
                     foreach (IAddressingMode addressingMode in instruction.AddressingModeToInfo.Keys)
                     {

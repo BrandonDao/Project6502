@@ -25,6 +25,7 @@ namespace Emulator
         public byte[] Memory { get; set; }
 
         private readonly Dictionary<byte, InstructionInfo> instructionInfoByOpCode;
+        private readonly Dictionary<byte, Action<byte, byte[], byte[], CPU>> executorByOpcode;
 
 
         public Emulator()
@@ -34,17 +35,18 @@ namespace Emulator
 
             // Don't really want to use reflection here,
             // so hopefully this is just a temporary solution
-            var allInstructions = Assembly
-                .GetAssembly(typeof(Instruction))
+            IEnumerable<Type> allInstructions = Assembly
+                .GetAssembly(typeof(Instruction))!
                 .GetTypes()
                 .Where(type => type.IsSubclassOf(typeof(Instruction)));
 
-            var instantiatedInstructions = allInstructions
+            Instruction[] instantiatedInstructions = allInstructions
                 .Where(type => type.GetConstructors().Length == 2)
                 .Select(type => Activator.CreateInstance(type) as Instruction)
-                .ToArray();
+                .ToArray()!;
 
             instructionInfoByOpCode = new Dictionary<byte, InstructionInfo>();
+            executorByOpcode = new Dictionary<byte, Action<byte, byte[], byte[], CPU>>();
             foreach (Instruction instruction in instantiatedInstructions)
             {
                 foreach (var info in instruction.AddressingModeToInfo.Values)
@@ -53,6 +55,7 @@ namespace Emulator
 
                     info.InstructionType = instruction.GetType();
                     instructionInfoByOpCode.Add(info.OpCode, info);
+                    executorByOpcode.Add(info.OpCode, instruction.Execute);
                 }
             }
 
@@ -96,7 +99,7 @@ namespace Emulator
                 CPU.RPC++;
             }
 
-            (Activator.CreateInstance(instructionInfoByOpCode[opCode].InstructionType) as Instruction).Execute(opCode, data, Memory, CPU);
+            executorByOpcode[opCode].Invoke(opCode, data, Memory, CPU);
         }
     }
 }
