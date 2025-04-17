@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace SharedLibrary.Instructions
 {
-    public abstract class Instruction
+    public abstract partial class Instruction
     {
         public abstract string Name { get; }
         public abstract Dictionary<IAddressingMode, InstructionInfo> AddressingModeToInfo { get; }
@@ -20,9 +20,15 @@ namespace SharedLibrary.Instructions
         private static Dictionary<string, short> labelToPosition;
         private static short machineCodeLength;
 
+        [GeneratedRegex(labelPattern, RegexOptions.IgnoreCase, "en-US")]
+        private static partial Regex LabelRegex();
+
+        [GeneratedRegex(@"[\(\$#]")]
+        private static partial Regex AddressRegex();
+
         public abstract void Execute(byte opCode, byte[] instructionData, byte[] memory, CPU CPU);
 
-        
+
         
         public static List<Instruction> Parse(string[] asmInstructions, ushort memoryStartAddress)
             => ParseIL(ParseAssembly(asmInstructions, memoryStartAddress));
@@ -116,7 +122,7 @@ namespace SharedLibrary.Instructions
                 string line = assemblyInstructions[lineNum];
                 FormatLine(ref line);
 
-                var labelMatch = Regex.Match(line, labelPattern, RegexOptions.IgnoreCase);
+                var labelMatch = LabelRegex().Match(line);
                 if (labelMatch.Success)
                 {
                     labelToPosition.Add(labelMatch.Groups[1].Value, (short)(position));
@@ -177,7 +183,7 @@ namespace SharedLibrary.Instructions
 
                 IAddressingMode addressingMode = instructionInfoByOpCode[opCode].AddressingMode;
 
-                if(address.Length != 0 && Regex.Match(address[0].ToString(), @"[\(\$#]").Success == false)
+                if(address.Length != 0 && AddressRegex().Match(address[0].ToString()).Success == false)
                 {
                     if (addressingMode == Absolute.Instance)
                     {
